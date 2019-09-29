@@ -24,5 +24,4 @@ public class CarpoolingBot  extends TelegramWebhookBot {
     public String getBotPath() {
         return null;
     }
-    //Bot body.
 }
