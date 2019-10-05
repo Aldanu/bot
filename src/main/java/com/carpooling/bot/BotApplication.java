@@ -15,7 +15,11 @@ public class BotApplication {
         //Add this line to initialize bots context
         ApiContextInitializer.init();
 
-        SpringApplication.run(CarpoolingBot.class, args);
+      try {
+            telegramBotsApi.registerBot(new CarpoolingBot());
+        } catch (TelegramApiRequestException e) {
+            e.printStackTrace();
+        }
 
     }
 }
