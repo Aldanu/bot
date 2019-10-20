@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.telegram.telegrambots.ApiContextInitializer;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 @SpringBootApplication
 public class BotApplication {
@@ -14,8 +16,8 @@ public class BotApplication {
     public static void main(String[] args) {
         //Add this line to initialize bots context
         ApiContextInitializer.init();
-
-      try {
+        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+        try {
             telegramBotsApi.registerBot(new CarpoolingBot());
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
