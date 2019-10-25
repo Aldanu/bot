@@ -1,5 +1,6 @@
 package com.carpooling.bot;
 
+import com.carpooling.bot.dto.CarDto;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -57,7 +58,13 @@ public class CarpoolingBot extends TelegramLongPollingBot {
         return "949452837:AAHuj-LyPG9VHc1vxIoGRJ7iMIyOoemEXHk";
     }
 
-
+    public void sendMessage(Long chat_id,String message_text){
+        /*try {
+            execute(message); // Sending our message object to user
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }*/
+    }
 
 
 
@@ -106,7 +113,8 @@ public class CarpoolingBot extends TelegramLongPollingBot {
                 break;
             case 3:
                 asientos=message_text;
-                String val="Marca = "+marca+"\nModelo = "+modelo+"\nPlaca = "+placa+"\nAsientos = "+asientos;
+                CarDto car=new CarDto(0, marca, modelo, placa, Integer.parseInt(asientos));
+                String val="Marca = "+car.getMarca()+"\nModelo = "+car.getModelo()+"\nPlaca = "+car.getPlaca()+"\nAsientos = "+car.getAsientos();
                 long chat_id3 = update.getMessage().getChatId();
                 SendMessage message3 = new SendMessage() // Create a message object object
                         .setChatId(chat_id3)
