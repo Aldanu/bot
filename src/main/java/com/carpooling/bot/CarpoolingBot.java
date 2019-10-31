@@ -23,23 +23,12 @@ public class CarpoolingBot extends TelegramLongPollingBot {
             long chat_id = update.getMessage().getChatId();
 
             if (message_text.equals("/registrar_vehiculo") || conversation==1) {
+                conversation=1;
                 CarDto cardto=new CarDto(0, "", "", "", 0);
-                if(idChat!=chat_id){
-                    SendMessage message = new SendMessage() // Create a message object object
-                            .setChatId(chat_id)
-                            .setText("Cual es la marca?");
-                    try {
-                        execute(message); // Sending our message object to user
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
-                    idChat=chat_id;
-                    conversation=1;
-                }else{
-                    /*paso=carBl.registroVehiculo(update, paso, cardto);
-                    if (paso==0) conv=0;*/
-                    registroVehiculo(update.getMessage().getText(), update.getMessage().getChatId());
-                }
+                    /*step=carBl.registroVehiculo(update.getMessage().getText(), update.getMessage().getChatId(), step, cardto);
+                    if (step==0) conversation=0;*/
+                    carRegister(update.getMessage().getText(), update.getMessage().getChatId());
+
             }else{
                 SendMessage message = new SendMessage() // Create a message object object
                         .setChatId(chat_id)
@@ -74,8 +63,8 @@ public class CarpoolingBot extends TelegramLongPollingBot {
         }
     }
 
-
-    private void registroVehiculo(Update update){
+/*
+    private void registroCarpooler(Update update){
         String message_text = update.getMessage().getText();
         long chat_id = update.getMessage().getChatId();
         SendMessage message= new SendMessage();
@@ -83,7 +72,7 @@ public class CarpoolingBot extends TelegramLongPollingBot {
             case 0:
                 message = new SendMessage() // Create a message object object
                         .setChatId(chat_id)
-                        .setText("Cual es el modelo?");
+                        .setText("Cual es la marca?");
                 step=1;
                 break;
             case 1:
@@ -124,8 +113,8 @@ public class CarpoolingBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-
-    private void registroVehiculo(String message_text, long chat_id){
+*/
+    private void carRegister(String message_text, long chat_id){
         SendMessage message= new SendMessage();
         switch (step){
             case 0:
