@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 public class CarpoolingBot extends TelegramLongPollingBot {
-    public CarBl carBl;
+    public CarBl carBl=new CarBl();
 
     private long idChat=0;
     private int conversation=0;
@@ -25,7 +25,7 @@ public class CarpoolingBot extends TelegramLongPollingBot {
             if (message_text.equals("/registrar_vehiculo") || conversation==1) {
                 conversation=1;
                 CarDto cardto=new CarDto(0, "", "", "", 0);
-                    /*step=carBl.registroVehiculo(update.getMessage().getText(), update.getMessage().getChatId(), step, cardto);
+                    /*step=carBl.carRegister(update.getMessage().getText(), update.getMessage().getChatId(), step, cardto);
                     if (step==0) conversation=0;*/
                     carRegister(update.getMessage().getText(), update.getMessage().getChatId());
 
@@ -116,49 +116,36 @@ public class CarpoolingBot extends TelegramLongPollingBot {
 */
     private void carRegister(String message_text, long chat_id){
         SendMessage message= new SendMessage();
+        String text="";
         switch (step){
             case 0:
-                message = new SendMessage() // Create a message object object
-                        .setChatId(chat_id)
-                        .setText("Cual es el modelo?");
+                text="Cual es el modelo?";
                 step=1;
                 break;
             case 1:
                 marca=message_text;
-                message = new SendMessage() // Create a message object object
-                        .setChatId(chat_id)
-                        .setText("Cual es el modelo?");
+                text="Cual es el modelo?";
                 step=2;
                 break;
             case 2:
                 modelo=message_text;
-                message = new SendMessage() // Create a message object object
-                        .setChatId(chat_id)
-                        .setText("Cual es la placa?");
+                text="Cual es la placa?";
                 step=3;
                 break;
             case 3:
                 placa=message_text;
-                message = new SendMessage() // Create a message object object
-                        .setChatId(chat_id)
-                        .setText("Cuantos pasajeros puede llevar?");
+                text="Cuantos pasajeros puede llevar?";
                 step=4;
                 break;
             case 4:
                 asientos=message_text;
                 CarDto car=new CarDto(0, marca, modelo, placa, Integer.parseInt(asientos));
                 String val="Marca = "+car.getMarca()+"\nModelo = "+car.getModelo()+"\nPlaca = "+car.getPlaca()+"\nAsientos = "+car.getAsientos();
-                message = new SendMessage() // Create a message object object
-                        .setChatId(chat_id)
-                        .setText("Registro exitoso con los siguientes datos: \n"+val);
+                text="Registro exitoso con los siguientes datos: \n"+val;
                 conversation=0;
                 step=0;
                 break;
         }
-        try {
-            execute(message); // Sending our message object to user
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sendMessage(chat_id, text);
     }
 }

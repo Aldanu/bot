@@ -11,7 +11,7 @@ public class CarBl {
 
     }
     CarpoolingBot carpoolingBot;
-    public int registroVehiculo(String message_text, long chat_id, int step, CarDto car) {
+    public int carRegister(String message_text, long chat_id, int step, CarDto car) {
         String text;
         switch (step) {
             case 0:
