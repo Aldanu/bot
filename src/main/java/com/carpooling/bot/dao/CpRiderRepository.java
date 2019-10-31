@@ -1,4 +1,4 @@
-package dao;
+package com.carpooling.bot.dao;
 
 import com.carpooling.bot.domain.CpRiderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
