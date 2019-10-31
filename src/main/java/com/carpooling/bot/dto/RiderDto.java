@@ -1,5 +1,7 @@
 package com.carpooling.bot.dto;
 
+import com.carpooling.bot.domain.CpRiderEntity;
+
 public class RiderDto {
     private Integer rider_id;
     private String first_name;
@@ -8,11 +10,11 @@ public class RiderDto {
     public RiderDto() {
     }
 
-    public RiderDto(Integer rider_id, String first_name, String last_name) {
-        this.rider_id = rider_id;
-        this.first_name = first_name;
-        this.last_name = last_name;
+    public RiderDto(CpRiderEntity cpRiderEntity) {
+        this.first_name = cpRiderEntity.getFirstName();
+        this.last_name = cpRiderEntity.getLastName();
     }
+
 
     public Integer getRider_id() {
         return rider_id;
