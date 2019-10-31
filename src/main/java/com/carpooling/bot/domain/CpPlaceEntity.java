@@ -2,6 +2,7 @@ package com.carpooling.bot.domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -9,9 +10,12 @@ import java.util.Objects;
 public class CpPlaceEntity {
     private long placeId;
     private String name;
+    private long zoneId;
     private BigDecimal latitude;
     private BigDecimal longitude;
     private int status;
+    private CpZoneEntity cpZoneByZoneId;
+    private Collection<CpTravelPlaceEntity> cpTravelPlacesByPlaceId;
 
     @Id
     @Column(name = "place_id")
@@ -31,6 +35,16 @@ public class CpPlaceEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Basic
+    @Column(name = "zone_id")
+    public long getZoneId() {
+        return zoneId;
+    }
+
+    public void setZoneId(long zoneId) {
+        this.zoneId = zoneId;
     }
 
     @Basic
@@ -69,6 +83,7 @@ public class CpPlaceEntity {
         if (o == null || getClass() != o.getClass()) return false;
         CpPlaceEntity that = (CpPlaceEntity) o;
         return placeId == that.placeId &&
+                zoneId == that.zoneId &&
                 status == that.status &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(latitude, that.latitude) &&
@@ -77,6 +92,25 @@ public class CpPlaceEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(placeId, name, latitude, longitude, status);
+        return Objects.hash(placeId, name, zoneId, latitude, longitude, status);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "zone_id", referencedColumnName = "zone_id", nullable = false)
+    public CpZoneEntity getCpZoneByZoneId() {
+        return cpZoneByZoneId;
+    }
+
+    public void setCpZoneByZoneId(CpZoneEntity cpZoneByZoneId) {
+        this.cpZoneByZoneId = cpZoneByZoneId;
+    }
+
+    @OneToMany(mappedBy = "cpPlaceByPlaceId")
+    public Collection<CpTravelPlaceEntity> getCpTravelPlacesByPlaceId() {
+        return cpTravelPlacesByPlaceId;
+    }
+
+    public void setCpTravelPlacesByPlaceId(Collection<CpTravelPlaceEntity> cpTravelPlacesByPlaceId) {
+        this.cpTravelPlacesByPlaceId = cpTravelPlacesByPlaceId;
     }
 }

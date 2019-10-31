@@ -9,11 +9,15 @@ import java.util.Objects;
 @Table(name = "cp_travel_rider", schema = "carpooling_db", catalog = "")
 public class CpTravelRiderEntity {
     private long travelRiderId;
+    private long travelId;
+    private long riderId;
     private BigDecimal experience;
     private int status;
     private String txUser;
     private String txHost;
     private Date txDate;
+    private CpTravelEntity cpTravelByTravelId;
+    private CpRiderEntity cpRiderByRiderId;
 
     @Id
     @Column(name = "travel_rider_id")
@@ -23,6 +27,26 @@ public class CpTravelRiderEntity {
 
     public void setTravelRiderId(long travelRiderId) {
         this.travelRiderId = travelRiderId;
+    }
+
+    @Basic
+    @Column(name = "travel_id")
+    public long getTravelId() {
+        return travelId;
+    }
+
+    public void setTravelId(long travelId) {
+        this.travelId = travelId;
+    }
+
+    @Basic
+    @Column(name = "rider_id")
+    public long getRiderId() {
+        return riderId;
+    }
+
+    public void setRiderId(long riderId) {
+        this.riderId = riderId;
     }
 
     @Basic
@@ -81,6 +105,8 @@ public class CpTravelRiderEntity {
         if (o == null || getClass() != o.getClass()) return false;
         CpTravelRiderEntity that = (CpTravelRiderEntity) o;
         return travelRiderId == that.travelRiderId &&
+                travelId == that.travelId &&
+                riderId == that.riderId &&
                 status == that.status &&
                 Objects.equals(experience, that.experience) &&
                 Objects.equals(txUser, that.txUser) &&
@@ -90,6 +116,26 @@ public class CpTravelRiderEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(travelRiderId, experience, status, txUser, txHost, txDate);
+        return Objects.hash(travelRiderId, travelId, riderId, experience, status, txUser, txHost, txDate);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "travel_id", referencedColumnName = "travel_id", nullable = false)
+    public CpTravelEntity getCpTravelByTravelId() {
+        return cpTravelByTravelId;
+    }
+
+    public void setCpTravelByTravelId(CpTravelEntity cpTravelByTravelId) {
+        this.cpTravelByTravelId = cpTravelByTravelId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "rider_id", referencedColumnName = "rider_id", nullable = false)
+    public CpRiderEntity getCpRiderByRiderId() {
+        return cpRiderByRiderId;
+    }
+
+    public void setCpRiderByRiderId(CpRiderEntity cpRiderByRiderId) {
+        this.cpRiderByRiderId = cpRiderByRiderId;
     }
 }

@@ -4,12 +4,15 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "cp_travel", schema = "carpooling_db", catalog = "")
 public class CpTravelEntity {
     private long travelId;
+    private long carId;
+    private long carpoolerId;
     private Time departureTime;
     private BigDecimal cost;
     private int numberPassengers;
@@ -18,6 +21,10 @@ public class CpTravelEntity {
     private String txUser;
     private String txHost;
     private Date txDate;
+    private CpCarEntity cpCarByCarId;
+    private CpCarpoolerEntity cpCarpoolerByCarpoolerId;
+    private Collection<CpTravelPlaceEntity> cpTravelPlacesByTravelId;
+    private Collection<CpTravelRiderEntity> cpTravelRidersByTravelId;
 
     @Id
     @Column(name = "travel_id")
@@ -27,6 +34,26 @@ public class CpTravelEntity {
 
     public void setTravelId(long travelId) {
         this.travelId = travelId;
+    }
+
+    @Basic
+    @Column(name = "car_id")
+    public long getCarId() {
+        return carId;
+    }
+
+    public void setCarId(long carId) {
+        this.carId = carId;
+    }
+
+    @Basic
+    @Column(name = "carpooler_id")
+    public long getCarpoolerId() {
+        return carpoolerId;
+    }
+
+    public void setCarpoolerId(long carpoolerId) {
+        this.carpoolerId = carpoolerId;
     }
 
     @Basic
@@ -115,6 +142,8 @@ public class CpTravelEntity {
         if (o == null || getClass() != o.getClass()) return false;
         CpTravelEntity that = (CpTravelEntity) o;
         return travelId == that.travelId &&
+                carId == that.carId &&
+                carpoolerId == that.carpoolerId &&
                 numberPassengers == that.numberPassengers &&
                 petFriendly == that.petFriendly &&
                 status == that.status &&
@@ -127,6 +156,44 @@ public class CpTravelEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(travelId, departureTime, cost, numberPassengers, petFriendly, status, txUser, txHost, txDate);
+        return Objects.hash(travelId, carId, carpoolerId, departureTime, cost, numberPassengers, petFriendly, status, txUser, txHost, txDate);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "car_id", referencedColumnName = "car_id", nullable = false)
+    public CpCarEntity getCpCarByCarId() {
+        return cpCarByCarId;
+    }
+
+    public void setCpCarByCarId(CpCarEntity cpCarByCarId) {
+        this.cpCarByCarId = cpCarByCarId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "carpooler_id", referencedColumnName = "carpooler_id", nullable = false)
+    public CpCarpoolerEntity getCpCarpoolerByCarpoolerId() {
+        return cpCarpoolerByCarpoolerId;
+    }
+
+    public void setCpCarpoolerByCarpoolerId(CpCarpoolerEntity cpCarpoolerByCarpoolerId) {
+        this.cpCarpoolerByCarpoolerId = cpCarpoolerByCarpoolerId;
+    }
+
+    @OneToMany(mappedBy = "cpTravelByTravelId")
+    public Collection<CpTravelPlaceEntity> getCpTravelPlacesByTravelId() {
+        return cpTravelPlacesByTravelId;
+    }
+
+    public void setCpTravelPlacesByTravelId(Collection<CpTravelPlaceEntity> cpTravelPlacesByTravelId) {
+        this.cpTravelPlacesByTravelId = cpTravelPlacesByTravelId;
+    }
+
+    @OneToMany(mappedBy = "cpTravelByTravelId")
+    public Collection<CpTravelRiderEntity> getCpTravelRidersByTravelId() {
+        return cpTravelRidersByTravelId;
+    }
+
+    public void setCpTravelRidersByTravelId(Collection<CpTravelRiderEntity> cpTravelRidersByTravelId) {
+        this.cpTravelRidersByTravelId = cpTravelRidersByTravelId;
     }
 }

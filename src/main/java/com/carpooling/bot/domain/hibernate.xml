@@ -6,7 +6,7 @@
   <session-factory>
     <property name="connection.url">jdbc:mysql://localhost:3306/carpooling_db</property>
     <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-      <mapping class="com.carpooling.bot.domain.CpCarEntity"/>
+    <mapping class="com.carpooling.bot.domain.CpCarEntity"/>
       <mapping class="com.carpooling.bot.domain.CpCarpoolerEntity"/>
       <mapping class="com.carpooling.bot.domain.CpPlaceEntity"/>
       <mapping class="com.carpooling.bot.domain.CpRiderEntity"/>

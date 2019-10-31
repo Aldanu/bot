@@ -3,6 +3,7 @@ package com.carpooling.bot.domain;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -16,6 +17,7 @@ public class CpRiderEntity {
     private String txUser;
     private String txHost;
     private Date txDate;
+    private Collection<CpTravelRiderEntity> cpTravelRidersByRiderId;
 
     @Id
     @Column(name = "rider_id")
@@ -115,5 +117,14 @@ public class CpRiderEntity {
     @Override
     public int hashCode() {
         return Objects.hash(riderId, firstName, lastName, reputation, status, txUser, txHost, txDate);
+    }
+
+    @OneToMany(mappedBy = "cpRiderByRiderId")
+    public Collection<CpTravelRiderEntity> getCpTravelRidersByRiderId() {
+        return cpTravelRidersByRiderId;
+    }
+
+    public void setCpTravelRidersByRiderId(Collection<CpTravelRiderEntity> cpTravelRidersByRiderId) {
+        this.cpTravelRidersByRiderId = cpTravelRidersByRiderId;
     }
 }

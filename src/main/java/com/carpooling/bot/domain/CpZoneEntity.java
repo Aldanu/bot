@@ -1,6 +1,7 @@
 package com.carpooling.bot.domain;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -9,6 +10,7 @@ public class CpZoneEntity {
     private long zoneId;
     private String name;
     private int status;
+    private Collection<CpPlaceEntity> cpPlacesByZoneId;
 
     @Id
     @Column(name = "zone_id")
@@ -53,5 +55,14 @@ public class CpZoneEntity {
     @Override
     public int hashCode() {
         return Objects.hash(zoneId, name, status);
+    }
+
+    @OneToMany(mappedBy = "cpZoneByZoneId")
+    public Collection<CpPlaceEntity> getCpPlacesByZoneId() {
+        return cpPlacesByZoneId;
+    }
+
+    public void setCpPlacesByZoneId(Collection<CpPlaceEntity> cpPlacesByZoneId) {
+        this.cpPlacesByZoneId = cpPlacesByZoneId;
     }
 }

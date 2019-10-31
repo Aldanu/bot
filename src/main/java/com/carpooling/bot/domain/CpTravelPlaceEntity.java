@@ -8,11 +8,15 @@ import java.util.Objects;
 @Table(name = "cp_travel_place", schema = "carpooling_db", catalog = "")
 public class CpTravelPlaceEntity {
     private long travelPlaceId;
+    private long placeId;
+    private long travelId;
     private int order;
     private int status;
     private String txUser;
     private String txHost;
     private Date txDate;
+    private CpPlaceEntity cpPlaceByPlaceId;
+    private CpTravelEntity cpTravelByTravelId;
 
     @Id
     @Column(name = "travel_place_id")
@@ -22,6 +26,26 @@ public class CpTravelPlaceEntity {
 
     public void setTravelPlaceId(long travelPlaceId) {
         this.travelPlaceId = travelPlaceId;
+    }
+
+    @Basic
+    @Column(name = "place_id")
+    public long getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(long placeId) {
+        this.placeId = placeId;
+    }
+
+    @Basic
+    @Column(name = "travel_id")
+    public long getTravelId() {
+        return travelId;
+    }
+
+    public void setTravelId(long travelId) {
+        this.travelId = travelId;
     }
 
     @Basic
@@ -80,6 +104,8 @@ public class CpTravelPlaceEntity {
         if (o == null || getClass() != o.getClass()) return false;
         CpTravelPlaceEntity that = (CpTravelPlaceEntity) o;
         return travelPlaceId == that.travelPlaceId &&
+                placeId == that.placeId &&
+                travelId == that.travelId &&
                 order == that.order &&
                 status == that.status &&
                 Objects.equals(txUser, that.txUser) &&
@@ -89,6 +115,26 @@ public class CpTravelPlaceEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(travelPlaceId, order, status, txUser, txHost, txDate);
+        return Objects.hash(travelPlaceId, placeId, travelId, order, status, txUser, txHost, txDate);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "place_id", referencedColumnName = "place_id", nullable = false)
+    public CpPlaceEntity getCpPlaceByPlaceId() {
+        return cpPlaceByPlaceId;
+    }
+
+    public void setCpPlaceByPlaceId(CpPlaceEntity cpPlaceByPlaceId) {
+        this.cpPlaceByPlaceId = cpPlaceByPlaceId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "travel_id", referencedColumnName = "travel_id", nullable = false)
+    public CpTravelEntity getCpTravelByTravelId() {
+        return cpTravelByTravelId;
+    }
+
+    public void setCpTravelByTravelId(CpTravelEntity cpTravelByTravelId) {
+        this.cpTravelByTravelId = cpTravelByTravelId;
     }
 }

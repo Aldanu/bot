@@ -2,12 +2,14 @@ package com.carpooling.bot.domain;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "cp_car", schema = "carpooling_db", catalog = "")
 public class CpCarEntity {
     private long carId;
+    private long carpoolerId;
     private String enrollmentNumber;
     private String brand;
     private String model;
@@ -15,6 +17,8 @@ public class CpCarEntity {
     private String txUser;
     private String txHost;
     private Date txDate;
+    private CpCarpoolerEntity cpCarpoolerByCarpoolerId;
+    private Collection<CpTravelEntity> cpTravelsByCarId;
 
     @Id
     @Column(name = "car_id")
@@ -24,6 +28,16 @@ public class CpCarEntity {
 
     public void setCarId(long carId) {
         this.carId = carId;
+    }
+
+    @Basic
+    @Column(name = "carpooler_id")
+    public long getCarpoolerId() {
+        return carpoolerId;
+    }
+
+    public void setCarpoolerId(long carpoolerId) {
+        this.carpoolerId = carpoolerId;
     }
 
     @Basic
@@ -102,6 +116,7 @@ public class CpCarEntity {
         if (o == null || getClass() != o.getClass()) return false;
         CpCarEntity that = (CpCarEntity) o;
         return carId == that.carId &&
+                carpoolerId == that.carpoolerId &&
                 status == that.status &&
                 Objects.equals(enrollmentNumber, that.enrollmentNumber) &&
                 Objects.equals(brand, that.brand) &&
@@ -113,6 +128,25 @@ public class CpCarEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(carId, enrollmentNumber, brand, model, status, txUser, txHost, txDate);
+        return Objects.hash(carId, carpoolerId, enrollmentNumber, brand, model, status, txUser, txHost, txDate);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "carpooler_id", referencedColumnName = "carpooler_id", nullable = false)
+    public CpCarpoolerEntity getCpCarpoolerByCarpoolerId() {
+        return cpCarpoolerByCarpoolerId;
+    }
+
+    public void setCpCarpoolerByCarpoolerId(CpCarpoolerEntity cpCarpoolerByCarpoolerId) {
+        this.cpCarpoolerByCarpoolerId = cpCarpoolerByCarpoolerId;
+    }
+
+    @OneToMany(mappedBy = "cpCarByCarId")
+    public Collection<CpTravelEntity> getCpTravelsByCarId() {
+        return cpTravelsByCarId;
+    }
+
+    public void setCpTravelsByCarId(Collection<CpTravelEntity> cpTravelsByCarId) {
+        this.cpTravelsByCarId = cpTravelsByCarId;
     }
 }
