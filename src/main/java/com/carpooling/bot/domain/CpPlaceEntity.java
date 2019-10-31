@@ -2,7 +2,7 @@ package com.carpooling.bot.domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -15,7 +15,7 @@ public class CpPlaceEntity {
     private BigDecimal longitude;
     private int status;
     private CpZoneEntity cpZoneByZoneId;
-    private Collection<CpTravelPlaceEntity> cpTravelPlacesByPlaceId;
+    private List<CpTravelPlaceEntity> cpTravelPlacesByPlaceId;
 
     @Id
     @Column(name = "place_id")
@@ -106,11 +106,11 @@ public class CpPlaceEntity {
     }
 
     @OneToMany(mappedBy = "cpPlaceByPlaceId")
-    public Collection<CpTravelPlaceEntity> getCpTravelPlacesByPlaceId() {
+    public List<CpTravelPlaceEntity> getCpTravelPlacesByPlaceId() {
         return cpTravelPlacesByPlaceId;
     }
 
-    public void setCpTravelPlacesByPlaceId(Collection<CpTravelPlaceEntity> cpTravelPlacesByPlaceId) {
+    public void setCpTravelPlacesByPlaceId(List<CpTravelPlaceEntity> cpTravelPlacesByPlaceId) {
         this.cpTravelPlacesByPlaceId = cpTravelPlacesByPlaceId;
     }
 }

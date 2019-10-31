@@ -2,7 +2,7 @@ package com.carpooling.bot.domain;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,7 +18,7 @@ public class CpCarEntity {
     private String txHost;
     private Date txDate;
     private CpCarpoolerEntity cpCarpoolerByCarpoolerId;
-    private Collection<CpTravelEntity> cpTravelsByCarId;
+    private List<CpTravelEntity> cpTravelsByCarId;
 
     @Id
     @Column(name = "car_id")
@@ -142,11 +142,11 @@ public class CpCarEntity {
     }
 
     @OneToMany(mappedBy = "cpCarByCarId")
-    public Collection<CpTravelEntity> getCpTravelsByCarId() {
+    public List<CpTravelEntity> getCpTravelsByCarId() {
         return cpTravelsByCarId;
     }
 
-    public void setCpTravelsByCarId(Collection<CpTravelEntity> cpTravelsByCarId) {
+    public void setCpTravelsByCarId(List<CpTravelEntity> cpTravelsByCarId) {
         this.cpTravelsByCarId = cpTravelsByCarId;
     }
 }

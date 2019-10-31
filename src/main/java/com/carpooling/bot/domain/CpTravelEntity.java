@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,8 +23,8 @@ public class CpTravelEntity {
     private Date txDate;
     private CpCarEntity cpCarByCarId;
     private CpCarpoolerEntity cpCarpoolerByCarpoolerId;
-    private Collection<CpTravelPlaceEntity> cpTravelPlacesByTravelId;
-    private Collection<CpTravelRiderEntity> cpTravelRidersByTravelId;
+    private List<CpTravelPlaceEntity> cpTravelPlacesByTravelId;
+    private List<CpTravelRiderEntity> cpTravelRidersByTravelId;
 
     @Id
     @Column(name = "travel_id")
@@ -180,20 +180,20 @@ public class CpTravelEntity {
     }
 
     @OneToMany(mappedBy = "cpTravelByTravelId")
-    public Collection<CpTravelPlaceEntity> getCpTravelPlacesByTravelId() {
+    public List<CpTravelPlaceEntity> getCpTravelPlacesByTravelId() {
         return cpTravelPlacesByTravelId;
     }
 
-    public void setCpTravelPlacesByTravelId(Collection<CpTravelPlaceEntity> cpTravelPlacesByTravelId) {
+    public void setCpTravelPlacesByTravelId(List<CpTravelPlaceEntity> cpTravelPlacesByTravelId) {
         this.cpTravelPlacesByTravelId = cpTravelPlacesByTravelId;
     }
 
     @OneToMany(mappedBy = "cpTravelByTravelId")
-    public Collection<CpTravelRiderEntity> getCpTravelRidersByTravelId() {
+    public List<CpTravelRiderEntity> getCpTravelRidersByTravelId() {
         return cpTravelRidersByTravelId;
     }
 
-    public void setCpTravelRidersByTravelId(Collection<CpTravelRiderEntity> cpTravelRidersByTravelId) {
+    public void setCpTravelRidersByTravelId(List<CpTravelRiderEntity> cpTravelRidersByTravelId) {
         this.cpTravelRidersByTravelId = cpTravelRidersByTravelId;
     }
 }

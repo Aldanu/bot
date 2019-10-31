@@ -1,7 +1,7 @@
 package com.carpooling.bot.domain;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -10,7 +10,7 @@ public class CpZoneEntity {
     private long zoneId;
     private String name;
     private int status;
-    private Collection<CpPlaceEntity> cpPlacesByZoneId;
+    private List<CpPlaceEntity> cpPlacesByZoneId;
 
     @Id
     @Column(name = "zone_id")
@@ -58,11 +58,11 @@ public class CpZoneEntity {
     }
 
     @OneToMany(mappedBy = "cpZoneByZoneId")
-    public Collection<CpPlaceEntity> getCpPlacesByZoneId() {
+    public List<CpPlaceEntity> getCpPlacesByZoneId() {
         return cpPlacesByZoneId;
     }
 
-    public void setCpPlacesByZoneId(Collection<CpPlaceEntity> cpPlacesByZoneId) {
+    public void setCpPlacesByZoneId(List<CpPlaceEntity> cpPlacesByZoneId) {
         this.cpPlacesByZoneId = cpPlacesByZoneId;
     }
 }
