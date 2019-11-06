@@ -5,55 +5,87 @@ import com.carpooling.bot.dto.CarDto;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Math.toIntExact;
+import java.util.logging.Logger;
 
 @Component
 public class CarpoolingBot extends TelegramLongPollingBot {
     public CarBl carBl=new CarBl();
     public static CarDto cardto=new CarDto();
-
+    private ArrayList <Long[]> datos=new ArrayList<>();
     private int conversation=0;
     private int step=0;
-
+    private final static Logger LOGGER = Logger.getLogger(CarpoolingBot.class.getName());
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            String message_text = update.getMessage().getText();
-            long chat_id = update.getMessage().getChatId();
-
-            if (message_text.equals("/iniciar")) {
-                createUserType(chat_id);
-            }
-            if (message_text.equals("/registrar_vehiculo") || conversation==1) {
-                conversation=1;
-                step=carBl.carRegister(update.getMessage().getText(), update.getMessage().getChatId(), step, cardto, new CarpoolingBot());
-                if (step==0) conversation=0;
-            }
-            if (message_text.equals("Carpooler")){
-                sendMessage(chat_id, "Usted entro como:"+message_text);
-            }
-            if (message_text.equals("Rider")){
-                sendMessage(chat_id, "Usted entro como:"+message_text);
-            }
+        if(newChat(update.getMessage().getChatId())){
+            addId(update.getMessage().getChatId());
+            LOGGER.info("Id added: "+update.getMessage().getChatId());
         }
-
-
-
+        LOGGER.info("Id already exists"+update.getMessage().getChatId());
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            ReplyMessage(update.getMessage());
+        }
     }
 
+    private void addId(Long chatId) {
+        Long[] data = new Long[3];
+        data[0]=chatId;
+        data[1]=0L;
+        data[2]=0L;
+        datos.add(data);
+    }
+
+    private boolean newChat(Long chatId) {
+        boolean newChat=true;
+        for(int id=0; id<datos.size(); id++){
+            LOGGER.info("Id: "+datos.get(id)[0]);
+            if(datos.get(id)[0].equals(chatId)){
+                newChat=false;
+            }
+        }
+        return newChat;
+    }
+
+    private void ReplyMessage(Message message) {
+        String message_text = message.getText();
+        long chat_id = message.getChatId();
+        int position=getId(chat_id);
+
+        if (message_text.equals("/iniciar")) {
+            createUserType(chat_id);
+        }
+        if (message_text.equals("/registrar_vehiculo") || conversation==1) {
+            conversation=1;
+            step=carBl.carRegister(message_text, chat_id, Math.toIntExact(datos.get(position)[2]), cardto, new CarpoolingBot());
+            datos.get(position)[2]=Long.parseLong(step+"");
+            if (step==0) conversation=0;
+        }
+        if (message_text.equals("Carpooler")){
+            sendMessage(chat_id, "Usted entro como:"+message_text);
+        }
+        if (message_text.equals("Rider")){
+            sendMessage(chat_id, "Usted entro como:"+message_text);
+        }
+    }
+
+    private int getId(long chat_id) {
+        int position=0;
+        for(int id=0; id<datos.size(); id++){
+            if(datos.get(id)[0]==chat_id){
+                position=id;
+            }
+        }
+        return position;
+    }
 
 
     @Override
