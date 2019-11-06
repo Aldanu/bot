@@ -8,7 +8,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
@@ -36,39 +38,38 @@ public class CarpoolingBot extends TelegramLongPollingBot {
 
                    // carRegister(update.getMessage().getText(), update.getMessage().getChatId());
 
-            }
-            if(message_text.equals("/iniciar")){
-                SendMessage message =custom_keyboard(chat_id, new SendMessage());
+            }else if (message_text.equals("/iniciar")) {
+                SendMessage message = new SendMessage() // Create a message object object
+                        .setChatId(chat_id)
+                        .setText("Como desea entrar:");
+                // Create ReplyKeyboardMarkup object
+                ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+                // Create the keyboard (list of keyboard rows)
+                List<KeyboardRow> keyboard = new ArrayList<>();
+                // Create a keyboard row
+                KeyboardRow row = new KeyboardRow();
+                // Set each button, you can also use KeyboardButton objects if you need something else than text
+                row.add("Carpooler");
+                // Add the first row to the keyboard
+                keyboard.add(row);
+                // Create another keyboard row
+                row = new KeyboardRow();
+                // Set each button for the second line
+                row.add("Rider");
+                // Add the second row to the keyboard
+                keyboard.add(row);
+                // Set the keyboard to the markup
+                keyboardMarkup.setKeyboard(keyboard);
+                // Add it to the message
+                message.setReplyMarkup(keyboardMarkup);
                 try {
                     execute(message); // Sending our message object to user
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-
             }
         }
-        if (update.hasCallbackQuery()) {
-            // Set variables
-            String call_data = update.getCallbackQuery().getData();
-            long message_id = update.getCallbackQuery().getMessage().getMessageId();
-            long chat_id = update.getCallbackQuery().getMessage().getChatId();
 
-            if (call_data.equals("1")) {
-                sendMessage(chat_id, "Eligio carpooler");
-            }
-            if (call_data.equals("2")) {
-                String answer = "Updated222222222222t";
-                EditMessageText new_message = new EditMessageText()
-                        .setChatId(chat_id)
-                        .setMessageId(toIntExact(message_id))
-                        .setText(answer);
-                try {
-                    execute(new_message);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     @Override
