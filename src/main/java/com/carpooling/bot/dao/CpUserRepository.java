@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CpUserRepository extends JpaRepository<CpUser, Integer> {
 
+    CpUser findByBotUserId(String botUserId);
 }

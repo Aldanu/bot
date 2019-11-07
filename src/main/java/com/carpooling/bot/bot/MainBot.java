@@ -5,7 +5,6 @@ import com.carpooling.bot.bl.CarBl;
 import com.carpooling.bot.bl.UserBl;
 import com.carpooling.bot.dto.CarDto;
 import com.carpooling.bot.dto.PersonDto;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -22,6 +21,7 @@ import java.util.logging.Logger;
 
 public class MainBot extends TelegramLongPollingBot {
     //variables used to send data to other classes
+    private BotBl botBl;
     private CarBl carBl;
     private UserBl userBl;
     //This both classes should be changed to an array in order to allow multiuser saving data
@@ -33,7 +33,8 @@ public class MainBot extends TelegramLongPollingBot {
 
     private final static Logger LOGGER = Logger.getLogger(CarpoolingBot.class.getName());
 
-    public MainBot(CarBl carBl,UserBl userBl){
+    public MainBot(BotBl botBl,CarBl carBl,UserBl userBl){
+        this.botBl = botBl;
         this.carBl = carBl;
         this.userBl = userBl;
     }
@@ -41,7 +42,7 @@ public class MainBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         //Here it verifies if the user has used the bot, if not newChat is true and the add the id of the user
-        if(newChat(update.getMessage().getChatId())){
+        /*if(newChat(update.getMessage().getChatId())){
             addId(update.getMessage().getChatId());
             LOGGER.info("Id added: "+update.getMessage().getChatId());
         }
@@ -49,6 +50,19 @@ public class MainBot extends TelegramLongPollingBot {
         LOGGER.info("Id already exists"+update.getMessage().getChatId());
         if (update.hasMessage() && update.getMessage().hasText()) {
             ReplyMessage(update.getMessage());
+        }*/
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            List<String> messages = botBl.processUpdate(update);
+            for(String messageText: messages) {
+                SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+                        .setChatId(update.getMessage().getChatId())
+                        .setText(messageText);
+                try {
+                    this.execute(message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
