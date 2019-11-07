@@ -42,6 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "CpCar.findByEnrollmentNumber", query = "SELECT c FROM CpCar c WHERE c.enrollmentNumber = :enrollmentNumber"),
     @NamedQuery(name = "CpCar.findByBrand", query = "SELECT c FROM CpCar c WHERE c.brand = :brand"),
     @NamedQuery(name = "CpCar.findByModel", query = "SELECT c FROM CpCar c WHERE c.model = :model"),
+    @NamedQuery(name = "CpCar.findByCapacity", query = "SELECT c FROM CpCar c WHERE c.capacity = :capacity"),
     @NamedQuery(name = "CpCar.findByStatus", query = "SELECT c FROM CpCar c WHERE c.status = :status"),
     @NamedQuery(name = "CpCar.findByTxUser", query = "SELECT c FROM CpCar c WHERE c.txUser = :txUser"),
     @NamedQuery(name = "CpCar.findByTxHost", query = "SELECT c FROM CpCar c WHERE c.txHost = :txHost"),
@@ -69,6 +70,10 @@ public class CpCar implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "model")
     private String model;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "capacity")
+    private int capacity;
     @Basic(optional = false)
     @NotNull
     @Column(name = "status")
@@ -101,11 +106,12 @@ public class CpCar implements Serializable {
         this.carId = carId;
     }
 
-    public CpCar(Integer carId, String enrollmentNumber, String brand, String model, int status, String txUser, String txHost, Date txDate) {
+    public CpCar(Integer carId, String enrollmentNumber, String brand, String model, int capacity, int status, String txUser, String txHost, Date txDate) {
         this.carId = carId;
         this.enrollmentNumber = enrollmentNumber;
         this.brand = brand;
         this.model = model;
+        this.capacity = capacity;
         this.status = status;
         this.txUser = txUser;
         this.txHost = txHost;
@@ -142,6 +148,14 @@ public class CpCar implements Serializable {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
     }
 
     public int getStatus() {

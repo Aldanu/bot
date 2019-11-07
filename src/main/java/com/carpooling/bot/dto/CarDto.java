@@ -1,61 +1,63 @@
 package com.carpooling.bot.dto;
 
+import com.carpooling.bot.domain.CpCar;
+
 public class CarDto {
-    private Integer carId;
-    private String marca;
-    private String modelo;
-    private String placa;
-    private int asientos;
+    private Integer car_id;
+    private String brand;
+    private String model;
+    private String enrollmentNumber;
+    private int capacity;
 
     public CarDto(){
 
     }
 
-    public CarDto(Integer carId, String marca, String modelo, String placa, int asientos) {
-        this.carId = carId;
-        this.marca = marca;
-        this.modelo = modelo;
-        this.placa = placa;
-        this.asientos = asientos;
+    public CarDto(CpCar cpCar) {
+        this.car_id = cpCar.getCarId();
+        this.brand = cpCar.getBrand();
+        this.model = cpCar.getModel();
+        this.enrollmentNumber = cpCar.getEnrollmentNumber();
+        this.capacity = cpCar.getCapacity();
     }
 
-    public Integer getCarId() {
-        return carId;
+    public Integer getCar_id() {
+        return car_id;
     }
 
-    public void setCarId(Integer carId) {
-        this.carId = carId;
+    public void setCar_id(Integer car_id) {
+        this.car_id = car_id;
     }
 
-    public String getMarca() {
-        return marca;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setMarca(String marca) {
-        this.marca = marca;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
-    public String getModelo() {
-        return modelo;
+    public String getModel() {
+        return model;
     }
 
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
+    public void setModel(String model) {
+        this.model = model;
     }
 
-    public String getPlaca() {
-        return placa;
+    public String getEnrollmentNumber() {
+        return enrollmentNumber;
     }
 
-    public void setPlaca(String placa) {
-        this.placa = placa;
+    public void setEnrollmentNumber(String enrollmentNumber) {
+        this.enrollmentNumber = enrollmentNumber;
     }
 
-    public int getAsientos() {
-        return asientos;
+    public int getCapacity() {
+        return capacity;
     }
 
-    public void setAsientos(int asientos) {
-        this.asientos = asientos;
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
     }
 }

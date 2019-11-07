@@ -15,6 +15,7 @@ public class PersonDto {
     }
 
     public PersonDto(CpPerson cpPerson) {
+
         this.first_name = cpPerson.getFirstName();
         this.last_name = cpPerson.getLastName();
         this.ci_number = cpPerson.getCiNumber();
