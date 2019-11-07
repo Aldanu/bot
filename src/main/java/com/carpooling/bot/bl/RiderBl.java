@@ -1,6 +1,6 @@
 package com.carpooling.bot.bl;
 
-import com.carpooling.bot.dao.CpRiderRepository;
+import com.carpooling.bot.dao.CpPersonRepository;
 import com.carpooling.bot.domain.CpRiderEntity;
 import com.carpooling.bot.dto.RiderDto;
 import com.carpooling.bot.dto.Status;
@@ -13,15 +13,15 @@ public class RiderBl {
 
 
 
-    CpRiderRepository cpRiderRepository;
+    CpPersonRepository cpPersonRepository;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    public RiderBl(CpRiderRepository cpRiderRepository) {
-        this.cpRiderRepository = cpRiderRepository;
+    public RiderBl(CpPersonRepository cpPersonRepository) {
+        this.cpPersonRepository = cpPersonRepository;
     }
 
     public CpRiderEntity findRiderById(Integer pk){
-        Optional<CpRiderEntity> optional = this.cpRiderRepository.findById(pk);
+        Optional<CpRiderEntity> optional = this.cpPersonRepository.findById(pk);
         if (optional.isPresent()) {
             return optional.get();
         } else {
@@ -32,7 +32,7 @@ public class RiderBl {
 
     public List<RiderDto> findAllPeople() {
         List<RiderDto> riderDtoList = new ArrayList<>();
-        for (CpRiderEntity cpRiderEntity:cpRiderRepository.findAllByStatus(Status.ACTIVE.getStatus())) {
+        for (CpRiderEntity cpRiderEntity: cpPersonRepository.findAllByStatus(Status.ACTIVE.getStatus())) {
             riderDtoList.add(new RiderDto(cpRiderEntity));
         }
         return riderDtoList;
