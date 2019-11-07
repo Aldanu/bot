@@ -1,5 +1,5 @@
 package com.carpooling.bot.dao;
-
+/*
 import com.carpooling.bot.domain.CpRiderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,3 +10,4 @@ public interface CpRiderRepository extends JpaRepository<CpRiderEntity, Integer>
 
     List<CpRiderEntity> findAllByStatus(int status) ;
 }
+*/

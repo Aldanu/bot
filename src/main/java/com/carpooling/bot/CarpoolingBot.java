@@ -1,7 +1,9 @@
 package com.carpooling.bot;
 
 import com.carpooling.bot.bl.CarBl;
+import com.carpooling.bot.bl.UserBl;
 import com.carpooling.bot.dto.CarDto;
+import com.carpooling.bot.dto.PersonDto;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,7 +21,9 @@ import java.util.logging.Logger;
 @Component
 public class CarpoolingBot extends TelegramLongPollingBot {
     public CarBl carBl=new CarBl();
+    public UserBl userBl=new UserBl();
     public static CarDto cardto=new CarDto();
+    public static PersonDto personDto=new PersonDto();
     private ArrayList <Long[]> datos=new ArrayList<>();
     private int conversation=0;
     private int step=0;
@@ -30,30 +34,17 @@ public class CarpoolingBot extends TelegramLongPollingBot {
             addId(update.getMessage().getChatId());
             LOGGER.info("Id added: "+update.getMessage().getChatId());
         }
-        LOGGER.info("Id already exists"+update.getMessage().getChatId());
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            ReplyMessage(update.getMessage());
-        }
-    }
-
-    private void addId(Long chatId) {
-        Long[] data = new Long[3];
-        data[0]=chatId;
-        data[1]=0L;
-        data[2]=0L;
-        datos.add(data);
-    }
-
-    private boolean newChat(Long chatId) {
-        boolean newChat=true;
-        for(int id=0; id<datos.size(); id++){
-            LOGGER.info("Id: "+datos.get(id)[0]);
-            if(datos.get(id)[0].equals(chatId)){
-                newChat=false;
+            LOGGER.info("Id already exists"+update.getMessage().getChatId());
+            if (update.hasMessage() && update.getMessage().hasText()) {
+                ReplyMessage(update.getMessage());
             }
-        }
-        return newChat;
     }
+
+    private boolean register(Long chatId) {
+
+        return false;
+    }
+
 
     private void ReplyMessage(Message message) {
         String message_text = message.getText();
@@ -61,9 +52,13 @@ public class CarpoolingBot extends TelegramLongPollingBot {
         int position=getId(chat_id);
 
         if (message_text.equals("/iniciar")) {
-            createUserType(chat_id);
+            if(!register(chat_id)){
+                LOGGER.info("Id registering");
+            }else{
+                createUserType(chat_id);
+            }
         }
-        if (message_text.equals("/registrar_vehiculo") || conversation==1) {
+        if ((message_text.equals("/registrar_vehiculo") || conversation==1) && register(chat_id)) {
             conversation=1;
             step=carBl.carRegister(message_text, chat_id, Math.toIntExact(datos.get(position)[2]), cardto, new CarpoolingBot());
             datos.get(position)[2]=Long.parseLong(step+"");
@@ -165,4 +160,22 @@ public class CarpoolingBot extends TelegramLongPollingBot {
         sendMessage(chat_id, text);
     }
 
+    private void addId(Long chatId) {
+        Long[] data = new Long[3];
+        data[0]=chatId;
+        data[1]=0L;
+        data[2]=0L;
+        datos.add(data);
+    }
+
+    private boolean newChat(Long chatId) {
+        boolean newChat=true;
+        for(int id=0; id<datos.size(); id++){
+            if(datos.get(id)[0].equals(chatId)){
+                LOGGER.info("Id encontrado: "+datos.get(id)[0]);
+                newChat=false;
+            }
+        }
+        return newChat;
+    }
 }

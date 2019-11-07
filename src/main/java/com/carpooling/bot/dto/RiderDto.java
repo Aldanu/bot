@@ -1,5 +1,5 @@
 package com.carpooling.bot.dto;
-
+/*
 import com.carpooling.bot.domain.CpRiderEntity;
 
 public class RiderDto {
@@ -40,3 +40,4 @@ public class RiderDto {
         this.last_name = last_name;
     }
 }
+*/

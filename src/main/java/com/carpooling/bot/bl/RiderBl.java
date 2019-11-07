@@ -1,5 +1,5 @@
 package com.carpooling.bot.bl;
-
+/*
 import com.carpooling.bot.dao.CpRiderRepository;
 import com.carpooling.bot.domain.CpRiderEntity;
 import com.carpooling.bot.dto.RiderDto;
@@ -40,3 +40,4 @@ public class RiderBl {
 
 
 }
+*/
