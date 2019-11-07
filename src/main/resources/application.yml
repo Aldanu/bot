@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: Carpool
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:15432/carpool_db
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: true
+    properties:
+      hibernate:
+        legacy_limit_handler: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    # show-sql: true
