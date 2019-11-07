@@ -1,5 +1,6 @@
 package com.carpooling.bot.bot;
 
+import com.carpooling.bot.bl.BotBl;
 import com.carpooling.bot.bl.CarBl;
 import com.carpooling.bot.bl.UserBl;
 import org.springframework.beans.factory.annotation.Autowired;
