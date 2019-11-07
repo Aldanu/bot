@@ -4,18 +4,21 @@ import com.carpooling.bot.dao.CpPersonRepository;
 import com.carpooling.bot.domain.CpPerson;
 import com.carpooling.bot.dto.PersonDto;
 import com.carpooling.bot.dto.Status;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class PersonBl {
 
 
 
     CpPersonRepository cpPersonRepository;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
     public PersonBl(CpPersonRepository cpPersonRepository) {
         this.cpPersonRepository = cpPersonRepository;
     }

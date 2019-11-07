@@ -2,7 +2,9 @@ package com.carpooling.bot.bl;
 
 import com.carpooling.bot.CarpoolingBot;
 import com.carpooling.bot.dto.PersonDto;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserBl {
     public Long userRegister(String message_text, long chat_id, int step, PersonDto personDto, CarpoolingBot carpoolingBot) {
     String text;
