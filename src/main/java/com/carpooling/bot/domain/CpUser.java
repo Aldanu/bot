@@ -36,6 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "CpUser.findAll", query = "SELECT c FROM CpUser c"),
     @NamedQuery(name = "CpUser.findByUserId", query = "SELECT c FROM CpUser c WHERE c.userId = :userId"),
     @NamedQuery(name = "CpUser.findByBotUserId", query = "SELECT c FROM CpUser c WHERE c.botUserId = :botUserId"),
+    @NamedQuery(name = "CpUser.findByChatUserId", query = "SELECT c FROM CpUser c WHERE c.chatUserId = :chatUserId"),
     @NamedQuery(name = "CpUser.findByConversationId", query = "SELECT c FROM CpUser c WHERE c.conversationId = :conversationId"),
     @NamedQuery(name = "CpUser.findBySubconversationId", query = "SELECT c FROM CpUser c WHERE c.subconversationId = :subconversationId"),
     @NamedQuery(name = "CpUser.findByLastMessageSent", query = "SELECT c FROM CpUser c WHERE c.lastMessageSent = :lastMessageSent"),
@@ -56,6 +57,11 @@ public class CpUser implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "bot_user_id")
     private String botUserId;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "chat_user_id")
+    private String chatUserId;
     @Column(name = "conversation_id")
     private Integer conversationId;
     @Column(name = "subconversation_id")
@@ -92,9 +98,10 @@ public class CpUser implements Serializable {
         this.userId = userId;
     }
 
-    public CpUser(Integer userId, String botUserId, String txUser, String txHost, Date txDate) {
+    public CpUser(Integer userId, String botUserId, String chatUserId, String txUser, String txHost, Date txDate) {
         this.userId = userId;
         this.botUserId = botUserId;
+        this.chatUserId = chatUserId;
         this.txUser = txUser;
         this.txHost = txHost;
         this.txDate = txDate;
@@ -114,6 +121,14 @@ public class CpUser implements Serializable {
 
     public void setBotUserId(String botUserId) {
         this.botUserId = botUserId;
+    }
+
+    public String getChatUserId() {
+        return chatUserId;
+    }
+
+    public void setChatUserId(String chatUserId) {
+        this.chatUserId = chatUserId;
     }
 
     public Integer getConversationId() {
