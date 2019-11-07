@@ -53,8 +53,24 @@ public class MainBot extends TelegramLongPollingBot {
             ReplyMessage(update.getMessage());
         }*/
         if (update.hasMessage() && update.getMessage().hasText()) {
-            List<String> messages = botBl.processUpdate(update);
-            for(String messageText: messages) {
+            int conversation = botBl.processUpdate(update);
+            List<String> responses = new ArrayList<>();
+            switch (conversation){
+                case 1:
+                    responses.add("Bienvenido a Carpooling Bot");
+                    responses.add("Para usar el ChatBot debes registrarte primero");
+                    responses.add("Ingresa tus apellidos");
+                    break;
+                case 2:
+                    responses.add("Ingresa tu nombre");
+                    break;
+                case 3:
+                    responses.add("Quieres usar la aplicacion como Rider o como Carpooler");
+                    responses.add("1. Para Carpooler");
+                    responses.add("2. Para Rider");
+                    break;
+            }
+            for(String messageText: responses) {
                 SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                         .setChatId(update.getMessage().getChatId())
                         .setText(messageText);
