@@ -1,11 +1,11 @@
 spring:
   application:
-    name: Carpool
+    name: CarpoolingBot
   datasource:
     platform: postgres
-    url: jdbc:postgresql://127.0.0.1:15432/carpool_db
+    url: jdbc:postgresql://127.0.0.1:5432/carpooling_db
     username: postgres
-    password: postgres
+    password: carpooling
   jpa:
     hibernate:
       ddl-auto: none
@@ -19,4 +19,3 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-    # show-sql: true
