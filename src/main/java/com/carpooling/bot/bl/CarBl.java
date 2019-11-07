@@ -11,6 +11,7 @@ public class CarBl {
         String text;
         switch (step) {
             case 0:
+                carpoolingBot.sendMessage(chat_id, "Para ser Carpooler debe registrar su vehiculo");
                 text= "Cual es la marca?";
                 step = 1;
                 carpoolingBot.sendMessage(chat_id, text); // Sending our message object to user

@@ -20,12 +20,12 @@ import java.util.logging.Logger;
 
 @Component
 public class CarpoolingBot extends TelegramLongPollingBot {
-    public CarBl carBl=new CarBl();
-    public UserBl userBl=new UserBl();
+    private CarBl carBl=new CarBl();
+    private UserBl userBl=new UserBl();
     public static CarDto cardto=new CarDto();
+    private ArrayList <Long[]> data=new ArrayList<>();
     public static PersonDto personDto=new PersonDto();
-    private ArrayList <Long[]> datos=new ArrayList<>();
-    private int conversation=0;
+    //private int conversation=0;
     private int step=0;
     private final static Logger LOGGER = Logger.getLogger(CarpoolingBot.class.getName());
     @Override
@@ -40,9 +40,17 @@ public class CarpoolingBot extends TelegramLongPollingBot {
             }
     }
 
-    private boolean register(Long chatId) {
-
-        return false;
+    private boolean register(Long chatId, int position, String message_text) {
+        boolean registered=false;
+        if (data.get(position)[2].equals(0L)){
+            registered=true;
+            data.get(position)[2]= Long.valueOf(0L);
+            data.get(position)[3]= Long.valueOf(0);
+        }else{
+            data.get(position)[3] = Long.valueOf(2);
+            data.get(position)[2] = userBl.userRegister(message_text, chatId, Math.toIntExact(data.get(position)[2]), personDto, new CarpoolingBot());
+        }
+        return registered;
     }
 
 
@@ -51,31 +59,37 @@ public class CarpoolingBot extends TelegramLongPollingBot {
         long chat_id = message.getChatId();
         int position=getId(chat_id);
 
-        if (message_text.equals("/iniciar")) {
-            if(!register(chat_id)){
+        if ((message_text.equals("/iniciar") || data.get(position)[3].equals(2L)) ) {
+            LOGGER.info(data.get(position)[0]+" dsdfgsdfagdsgasdgsgsd "+data.get(position)[1].equals(0L));
+            if(!register(chat_id, position, message_text) && data.get(position)[1].equals(0L)){
                 LOGGER.info("Id registering");
             }else{
+
                 createUserType(chat_id);
             }
         }
-        if ((message_text.equals("/registrar_vehiculo") || conversation==1) && register(chat_id)) {
-            conversation=1;
-            step=carBl.carRegister(message_text, chat_id, Math.toIntExact(datos.get(position)[2]), cardto, new CarpoolingBot());
-            datos.get(position)[2]=Long.parseLong(step+"");
-            if (step==0) conversation=0;
+        if (((message_text.equals("/registrar_vehiculo") || data.get(position)[3].equals(1L))) && data.get(position)[1].equals(2L)) {
+            data.get(position)[3]= Long.valueOf(1);
+            step=carBl.carRegister(message_text, chat_id, Math.toIntExact(data.get(position)[2]), cardto, new CarpoolingBot());
+            data.get(position)[2]=Long.parseLong(step+"");
+            if (step==0) data.get(position)[3]= Long.valueOf(0);
         }
         if (message_text.equals("Carpooler")){
             sendMessage(chat_id, "Usted entro como:"+message_text);
+            data.get(position)[1]= Long.valueOf(2);
+            LOGGER.info(data.get(position)[0]+" is in Carpooler mode");
         }
         if (message_text.equals("Rider")){
+            data.get(position)[1]= Long.valueOf(1);
             sendMessage(chat_id, "Usted entro como:"+message_text);
+            LOGGER.info(data.get(position)[0]+" is in Rider mode");
         }
     }
 
     private int getId(long chat_id) {
         int position=0;
-        for(int id=0; id<datos.size(); id++){
-            if(datos.get(id)[0]==chat_id){
+        for(int id=0; id<data.size(); id++){
+            if(data.get(id)[0]==chat_id){
                 position=id;
             }
         }
@@ -138,7 +152,7 @@ public class CarpoolingBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-
+/*
     public void menu(String message_text, long chat_id){
         SendMessage message = new SendMessage();
         String text="";
@@ -159,21 +173,26 @@ public class CarpoolingBot extends TelegramLongPollingBot {
         }
         sendMessage(chat_id, text);
     }
-
+*/
     private void addId(Long chatId) {
-        Long[] data = new Long[3];
-        data[0]=chatId;
-        data[1]=0L;
-        data[2]=0L;
-        datos.add(data);
+        Long[] dataCreation = new Long[4];
+        //ChatId
+        dataCreation[0]=chatId;
+        //1 for rider 2 for carpooler in order to limit the user choices
+        dataCreation[1]=0L;
+        //Step of the conversation which the user is in
+        dataCreation[2]=-1L;
+        //Conversation in which the user is in
+        dataCreation[3]=0L;
+        data.add(dataCreation);
     }
 
     private boolean newChat(Long chatId) {
         boolean newChat=true;
-        for(int id=0; id<datos.size(); id++){
-            if(datos.get(id)[0].equals(chatId)){
-                LOGGER.info("Id encontrado: "+datos.get(id)[0]);
-                newChat=false;
+        for (Long[] datum : data) {
+            if (datum[0].equals(chatId)) {
+                LOGGER.info("Id encontrado: " + datum[0]);
+                newChat = false;
             }
         }
         return newChat;
