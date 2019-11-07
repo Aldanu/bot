@@ -10,5 +10,5 @@ public interface CpUserRepository extends JpaRepository<CpUser, Integer> {
 
     CpUser findByBotUserId(String botUserId);
 
-    List<CpUser> findAllBySctatus(int status);
+    //List<CpUser> findAllByStatus(int status);
 }

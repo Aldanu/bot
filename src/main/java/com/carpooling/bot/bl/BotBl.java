@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BotBl {
@@ -35,7 +36,34 @@ public class BotBl {
             response = 1;
         }
         else{
-            response = 3;
+            Integer in;
+            CpPerson cpPerson;
+            CpUser cpUser = cpUserRepository.findByBotUserId(update.getMessage().getFrom().getId().toString());
+            int last_conversation = cpUser.getConversationId();
+            switch (last_conversation){
+                case 1:
+                    in = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    cpPerson = cpPersonRepository.findById(in).get();
+                    cpPerson.setLastName(update.getMessage().getText());
+                    cpPersonRepository.save(cpPerson);
+                    cpUser.setConversationId(2);
+                    cpUserRepository.save(cpUser);
+                    response = 2;
+                    break;
+                case 2:
+                    in = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    cpPerson = cpPersonRepository.findById(in).get();
+                    cpPerson.setFirstName(update.getMessage().getText());
+                    cpPersonRepository.save(cpPerson);
+                    cpUser.setConversationId(3);
+                    cpUserRepository.save(cpUser);
+                    response = 3;
+                case 3:
+
+            }
+
         }
         return response;
     }
@@ -46,7 +74,13 @@ public class BotBl {
         if(cpUser==null){
             CpPerson cpPerson = new CpPerson();
             cpPerson.setFirstName(user.getFirstName());
-            cpPerson.setLastName(user.getLastName());
+
+            if(user.getLastName() == null){
+                cpPerson.setLastName("-");
+            }
+            else{
+                cpPerson.setLastName(user.getLastName());
+            }
             cpPerson.setStatus(Status.ACTIVE.getStatus());
             cpPerson.setCarpool(0);//0 is for a not carpooler user
             cpPerson.setTxHost("localhost");
@@ -57,6 +91,7 @@ public class BotBl {
             cpUser.setBotUserId(user.getId().toString());
             cpUser.setChatUserId(update.getMessage().getChatId().toString());
             cpUser.setPersonId(cpPerson);
+            cpUser.setConversationId(1);
             cpUser.setTxHost("localhost");
             cpUser.setTxUser("admin");
             cpUser.setTxDate(new Date());

@@ -25,10 +25,10 @@ public class CpUserController {
         this.userBl = userBl;
     }
 
-    @RequestMapping(value = "/",
+    /*@RequestMapping(value = "/",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     List<UserDto> all(){
-        return userBl.findAllPeople();
-    }
+        return userBl.fin();
+    }*/
 }

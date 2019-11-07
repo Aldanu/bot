@@ -210,7 +210,7 @@ public class CarpoolingBot extends TelegramLongPollingBot {
             data.get(position)[3]= Long.valueOf(0);
         }else{
             data.get(position)[3] = Long.valueOf(2);
-            data.get(position)[2] = userBl.userRegister(message_text, chatId, Math.toIntExact(data.get(position)[2]), personDto, new CarpoolingBot());
+           // data.get(position)[2] = userBl.userRegister(message_text, chatId, Math.toIntExact(data.get(position)[2]), personDto, new CarpoolingBot());
         }
         return registered;
     }

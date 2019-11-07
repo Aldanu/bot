@@ -1,5 +1,6 @@
 package com.carpooling.bot.bot;
 
+
 import com.carpooling.bot.CarpoolingBot;
 import com.carpooling.bot.bl.BotBl;
 import com.carpooling.bot.bl.CarBl;
@@ -248,7 +249,7 @@ public class MainBot extends TelegramLongPollingBot {
             data.get(position)[3]= Long.valueOf(0);
         }else{
             data.get(position)[3] = Long.valueOf(2);
-            data.get(position)[2] = userBl.userRegister(message_text, chatId, Math.toIntExact(data.get(position)[2]), personDto, new CarpoolingBot());
+            //data.get(position)[2] = userBl.userRegister(message_text, chatId, Math.toIntExact(data.get(position)[2]), personDto, new CarpoolingBot());
         }
         return registered;
     }
