@@ -1,5 +1,6 @@
 package com.carpooling.bot.api;
 
+import com.carpooling.bot.bl.UserBl;
 import com.carpooling.bot.dao.CpCarRepository;
 import com.carpooling.bot.dao.CpUserRepository;
 import com.carpooling.bot.domain.CpCar;
@@ -18,21 +19,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class CpUserController {
-    private CpUserRepository cpUserRepository;
+    private UserBl userBl;
 
-    @Autowired
-    public CpUserController(CpUserRepository cpUserRepository){
-        this.cpUserRepository = cpUserRepository;
+    public CpUserController(UserBl userBl) {
+        this.userBl = userBl;
     }
 
     @RequestMapping(value = "/",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     List<UserDto> all(){
-        List<UserDto> userDtoList = new ArrayList<>();
-        for(CpUser cpUser: cpUserRepository.findAll()){
-            userDtoList.add(new UserDto(cpUser));
-        }
-        return userDtoList;
+        return userBl.findAllPeople();
     }
 }
