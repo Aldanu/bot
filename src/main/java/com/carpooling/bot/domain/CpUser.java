@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "CpUser.findByUserId", query = "SELECT c FROM CpUser c WHERE c.userId = :userId"),
     @NamedQuery(name = "CpUser.findByBotUserId", query = "SELECT c FROM CpUser c WHERE c.botUserId = :botUserId"),
     @NamedQuery(name = "CpUser.findByConversationId", query = "SELECT c FROM CpUser c WHERE c.conversationId = :conversationId"),
+    @NamedQuery(name = "CpUser.findBySubconversationId", query = "SELECT c FROM CpUser c WHERE c.subconversationId = :subconversationId"),
     @NamedQuery(name = "CpUser.findByLastMessageSent", query = "SELECT c FROM CpUser c WHERE c.lastMessageSent = :lastMessageSent"),
     @NamedQuery(name = "CpUser.findByLastMessageReceived", query = "SELECT c FROM CpUser c WHERE c.lastMessageReceived = :lastMessageReceived"),
     @NamedQuery(name = "CpUser.findByTxUser", query = "SELECT c FROM CpUser c WHERE c.txUser = :txUser"),
@@ -57,6 +58,8 @@ public class CpUser implements Serializable {
     private String botUserId;
     @Column(name = "conversation_id")
     private Integer conversationId;
+    @Column(name = "subconversation_id")
+    private Integer subconversationId;
     @Size(max = 250)
     @Column(name = "last_message_sent")
     private String lastMessageSent;
@@ -119,6 +122,14 @@ public class CpUser implements Serializable {
 
     public void setConversationId(Integer conversationId) {
         this.conversationId = conversationId;
+    }
+
+    public Integer getSubconversationId() {
+        return subconversationId;
+    }
+
+    public void setSubconversationId(Integer subconversationId) {
+        this.subconversationId = subconversationId;
     }
 
     public String getLastMessageSent() {
