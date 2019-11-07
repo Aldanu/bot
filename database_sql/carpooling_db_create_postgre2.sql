@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2019-11-07 14:02:12.077
+-- Last modification date: 2019-11-07 14:39:45.744
 
 -- tables
 -- Table: cp_car
@@ -90,6 +90,7 @@ CREATE TABLE cp_user (
     user_id serial  NOT NULL,
     person_id int  NOT NULL,
     bot_user_id varchar(50)  NOT NULL,
+    chat_user_id varchar(50)  NOT NULL,
     conversation_id int  NULL,
     subconversation_id int  NULL,
     last_message_sent varchar(250)  NULL,
