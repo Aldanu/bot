@@ -40,6 +40,7 @@ public class BotBl {
             CpPerson cpPerson;
             CpUser cpUser = cpUserRepository.findByBotUserId(update.getMessage().getFrom().getId().toString());
             int last_conversation = cpUser.getConversationId();
+            //What happens when chatbot receives a response to a conversation "last conversation"
             switch (last_conversation){
                 case 1:
                     in = cpUser.getPersonId().getPersonId();
@@ -61,7 +62,8 @@ public class BotBl {
                     cpUserRepository.save(cpUser);
                     response = 3;
                 case 3:
-
+                    response = 3;
+                    break;
             }
 
         }

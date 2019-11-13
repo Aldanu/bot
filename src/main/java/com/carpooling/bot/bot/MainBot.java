@@ -56,6 +56,7 @@ public class MainBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             int conversation = botBl.processUpdate(update);
             List<String> responses = new ArrayList<>();
+            ReplyKeyboardMarkup rkm=null;
             switch (conversation){
                 case 1:
                     responses.add("Bienvenido a Carpooling Bot");
@@ -67,16 +68,22 @@ public class MainBot extends TelegramLongPollingBot {
                     break;
                 case 3:
                     responses.add("Quieres usar la aplicacion como Rider o como Carpooler");
-                    responses.add("1. Para Carpooler");
-                    responses.add("2. Para Rider");
+                    rkm= createReplyKeyboard();
                     break;
             }
             for(String messageText: responses) {
                 SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                         .setChatId(update.getMessage().getChatId())
                         .setText(messageText);
+                if(rkm!=null){
+                    message.setReplyMarkup(rkm);
+                }else{
+                    ReplyKeyboardRemove keyboardMarkupRemove = new ReplyKeyboardRemove();
+                    message.setReplyMarkup(keyboardMarkupRemove);
+                }
                 try {
                     this.execute(message);
+
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
@@ -98,7 +105,7 @@ public class MainBot extends TelegramLongPollingBot {
                 LOGGER.info("Id registering");
             }else{
 
-                createUserType(chat_id);
+                //createUserType();
             }
         }
         //If the user wants to register its car he has to write /registrar_vehiculo and has to be a carpooler user type
@@ -158,11 +165,7 @@ public class MainBot extends TelegramLongPollingBot {
     }
 
     //Here the user decides whether it will be a carpooler or a rider and creates a custom keyboard for it
-    private void createUserType(long chat_id) {
-        SendMessage message = new SendMessage() // Create a message object object
-                .setChatId(chat_id)
-                .setText("Como desea entrar:");
-        // Create ReplyKeyboardMarkup object
+    private ReplyKeyboardMarkup createReplyKeyboard() {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         // Create the keyboard (list of keyboard rows)
         List<KeyboardRow> keyboard = new ArrayList<>();
@@ -181,14 +184,7 @@ public class MainBot extends TelegramLongPollingBot {
         // Set the keyboard to the markup
         keyboardMarkup.setKeyboard(keyboard);
         // Add it to the message
-        message.setReplyMarkup(keyboardMarkup);
-
-        try {
-            execute(message); // Sending our message object to user
-
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        return keyboardMarkup;
     }
     //This function is in process of being created, this will be the main function where it will decides in what conversation is a user
 /*
