@@ -62,7 +62,53 @@ public class BotBl {
                     cpUserRepository.save(cpUser);
                     response = 3;
                 case 3:
+                    in = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    cpPerson = cpPersonRepository.findById(in).get();
                     response = 3;
+                    if(update.getMessage().getText().equals("Carpooler")){
+                        cpPerson.setCarpool(1);
+                        cpPersonRepository.save(cpPerson);
+                        cpUser.setConversationId(4);
+                        cpUserRepository.save(cpUser);
+                        response = 4;
+                    }
+                    break;
+                case 4:
+                    in = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    cpPerson = cpPersonRepository.findById(in).get();
+                    cpPerson.setCellphoneNumber(update.getMessage().getText());
+                    cpPersonRepository.save(cpPerson);
+                    cpUser.setConversationId(5);
+                    cpUserRepository.save(cpUser);
+                    response = 5;
+                    break;
+                case 5:
+                    in = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    cpPerson = cpPersonRepository.findById(in).get();
+                    cpPerson.setCiNumber(update.getMessage().getText());
+
+                    cpPersonRepository.save(cpPerson);
+                    cpUser.setConversationId(6);
+                    cpUserRepository.save(cpUser);
+                    response = 3;
+                    break;
+                case 6:
+
+                    response = 6;
+                    break;
+                case 7:
+
+                    response = 8;
+                    break;
+                case 8:
+
+                    response = 9;
+                    break;
+                case 9:
+                    response = 9;
                     break;
             }
 

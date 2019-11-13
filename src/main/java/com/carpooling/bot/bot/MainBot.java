@@ -68,7 +68,7 @@ public class MainBot extends TelegramLongPollingBot {
                     responses.add("¿Cuál es su número carnet de identidad?");
                     break;
                 case 6:
-                    responses.add("Para usar la aplicacion registre su vehiculo");
+                    responses.add("Para ser un carpooler registre su vehiculo");
                     responses.add("¿Cuál es la marca del vehículo?");
                     break;
                 case 7:
