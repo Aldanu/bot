@@ -43,16 +43,6 @@ public class MainBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        //Here it verifies if the user has used the bot, if not newChat is true and the add the id of the user
-        /*if(newChat(update.getMessage().getChatId())){
-            addId(update.getMessage().getChatId());
-            LOGGER.info("Id added: "+update.getMessage().getChatId());
-        }
-        //Then it send the message to the function ReplyMessage
-        LOGGER.info("Id already exists"+update.getMessage().getChatId());
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            ReplyMessage(update.getMessage());
-        }*/
         if (update.hasMessage() && update.getMessage().hasText()) {
             int conversation = botBl.processUpdate(update);
             List<String> responses = new ArrayList<>();
@@ -70,6 +60,27 @@ public class MainBot extends TelegramLongPollingBot {
                     responses.add("Quieres usar la aplicacion como Rider o como Carpooler");
                     rkm= createReplyKeyboard();
                     break;
+                case 4:
+                    responses.add("Para ser carpooler debe agregar algunos datos más");
+                    responses.add("¿Cuál es su celular?");
+                    break;
+                case 5:
+                    responses.add("¿Cuál es su número carnet de identidad?");
+                    break;
+                case 6:
+                    responses.add("Para usar la aplicacion registre su vehiculo");
+                    responses.add("¿Cuál es la marca del vehículo?");
+                    break;
+                case 7:
+                    responses.add("¿Cuál es el modelo?");
+                    break;
+                case 8:
+                    responses.add("¿Cuál es la placa?");
+                    break;
+                case 9:
+                    responses.add("¿Cuantos pasajeros puede llevar?");
+                    break;
+
             }
             for(String messageText: responses) {
                 SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
@@ -92,7 +103,7 @@ public class MainBot extends TelegramLongPollingBot {
     }
 
     //This function differentiates the message received
-    private void ReplyMessage(Message message) {
+    /*private void ReplyMessage(Message message) {
         String message_text = message.getText();
         long chat_id = message.getChatId();
         //here the position where the chatId is stored is obtained
@@ -128,28 +139,17 @@ public class MainBot extends TelegramLongPollingBot {
             sendMessage(chat_id, "Usted entro como:"+message_text);
             LOGGER.info(data.get(position)[0]+" is in Rider mode");
         }
-    }
-    //return the position of the Id searched
-    private int getId(long chat_id) {
-        int position=0;
-        for(int id=0; id<data.size(); id++){
-            if(data.get(id)[0]==chat_id){
-                position=id;
-            }
-        }
-        return position;
-    }
-
+    }*/
 
     @Override
     public String getBotUsername() {
         return "TheCarpoolerBot";
     }
-
     @Override
     public String getBotToken() {
         return "949452837:AAHuj-LyPG9VHc1vxIoGRJ7iMIyOoemEXHk";
     }
+
     //Here it send a message to the user and removes  any custom keyboard
     public void sendMessage(long chat_id, String text){
         SendMessage message = new SendMessage() // Create a message object object
@@ -186,69 +186,5 @@ public class MainBot extends TelegramLongPollingBot {
         // Add it to the message
         return keyboardMarkup;
     }
-    //This function is in process of being created, this will be the main function where it will decides in what conversation is a user
-/*
-    public void menu(String message_text, long chat_id){
-        SendMessage message = new SendMessage();
-        String text="";
-        switch(step){
-            case 0:
-                text="Ingresará conmo rider o carpooler?";
-
-                break;
-            case 100:
-                text="A donde desea ir?";
-
-                break;
-            case 101:
-                text="Desde donde desea partir?";
-                break;
-            case  102:
-                break;
-        }
-        sendMessage(chat_id, text);
-    }
-*/
-    //This adds a user into the arrayList
-    private void addId(Long chatId) {
-        Long[] dataCreation = new Long[4];
-        //ChatId
-        dataCreation[0]=chatId;
-        //1 for rider 2 for carpooler in order to limit the user choices
-        dataCreation[1]=0L;
-        //Step of the conversation which the user is in, is set to -1 because is not in any conversation and not register,
-        // then it by default should be on 0.
-        dataCreation[2]=-1L;
-        //Conversation in which the user is in
-        dataCreation[3]=0L;
-        data.add(dataCreation);
-    }
-
-    //This search if the ChatId exist in the arrayList
-    private boolean newChat(Long chatId) {
-        boolean newChat=true;
-        for (Long[] datum : data) {
-            if (datum[0].equals(chatId)) {
-                LOGGER.info("Id encontrado: " + datum[0]);
-                newChat = false;
-            }
-        }
-        return newChat;
-    }
-
-    //Here the user is being registered
-    private boolean register(Long chatId, int position, String message_text) {
-        boolean registered=false;
-        if (data.get(position)[2].equals(0L)){
-            registered=true;
-            data.get(position)[2]= Long.valueOf(0L);
-            data.get(position)[3]= Long.valueOf(0);
-        }else{
-            data.get(position)[3] = Long.valueOf(2);
-            //data.get(position)[2] = userBl.userRegister(message_text, chatId, Math.toIntExact(data.get(position)[2]), personDto, new CarpoolingBot());
-        }
-        return registered;
-    }
-
 
 }
