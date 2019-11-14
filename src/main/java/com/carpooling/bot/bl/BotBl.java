@@ -40,7 +40,7 @@ public class BotBl {
             response = 1;
         }
         else{
-            Integer in;
+            Integer idUser;
             CpCar cpCar;
             CpPerson cpPerson;
             CpUser cpUser = cpUserRepository.findByBotUserId(update.getMessage().getFrom().getId().toString());
@@ -48,130 +48,126 @@ public class BotBl {
             //What happens when chatbot receives a response to a conversation "last conversation"
             switch (last_conversation){
                 case 1:
-                    in = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",in);
-                    cpPerson = cpPersonRepository.findById(in).get();
-                    cpPerson.setLastName(update.getMessage().getText());
-                    cpPersonRepository.save(cpPerson);
-                    cpUser.setConversationId(2);
-                    cpUserRepository.save(cpUser);
-                    response = 2;
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    String newLastName = update.getMessage().getText();
+                    //See if the Last name only has alphabetical Letters and spaces
+                    Boolean validation = isOnlyAlphabeticalCharacters(newLastName);
+                    if(validation){
+                        cpPerson.setLastName(newLastName);
+                        cpPersonRepository.save(cpPerson);
+                        cpUser.setConversationId(2);
+                        cpUserRepository.save(cpUser);
+                        response = 2;
+                    }
+                    else{
+                        cpUser.setConversationId(4);
+                        cpUserRepository.save(cpUser);
+                        response = 4;
+                    }
+
                     break;
                 case 2:
-                    in = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",in);
-                    cpPerson = cpPersonRepository.findById(in).get();
-                    cpPerson.setFirstName(update.getMessage().getText());
-                    cpPersonRepository.save(cpPerson);
-                    cpUser.setConversationId(3);
-                    cpUserRepository.save(cpUser);
-                    response = 3;
-                case 3:
-                    in = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",in);
-                    cpPerson = cpPersonRepository.findById(in).get();
-                    response = 3;
-                    if(update.getMessage().getText().equals("Carpooler")){
-                        cpPerson.setCarpool(1);
-                        cpPersonRepository.save(cpPerson);
-                        if(cpPerson.getCellphoneNumber()==null){
-                            cpUser.setConversationId(4);
-                            cpUserRepository.save(cpUser);
-                            response = 4;
-                        }else{
-                            cpUser.setConversationId(6);
-                            cpUserRepository.save(cpUser);
-                            response = 6;
-                        }
-                    }
-                    break;
-                case 4:
-                    in = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",in);
-                    cpPerson = cpPersonRepository.findById(in).get();
-                    cpPerson.setCellphoneNumber(update.getMessage().getText());
-                    cpPersonRepository.save(cpPerson);
-                    cpUser.setConversationId(5);
-                    cpUserRepository.save(cpUser);
-                    response = 5;
-                    break;
-                case 5:
-                    in = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",in);
-                    cpPerson = cpPersonRepository.findById(in).get();
-                    cpPerson.setCiNumber(update.getMessage().getText());
-
-                    cpPersonRepository.save(cpPerson);
-                    cpUser.setConversationId(6);
-                    cpUserRepository.save(cpUser);
-                    response = 6;
-                    break;
-                case 6:
-                    in = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",in);
-                    cpPerson = cpPersonRepository.findById(in).get();
-                    response = 6;
-                    //Here is the menu for the carpooler
-                    if(update.getMessage().getText().equals("Registrar Vehículo")){
-                        cpUser.setConversationId(7);
-                        cpUserRepository.save(cpUser);
-                        response = 7;
-                    }
-                    if(update.getMessage().getText().equals("Registrar Viaje")){
-                        cpUser.setConversationId(6);
-                        cpUserRepository.save(cpUser);
-                        response = 6;
-                    }
-                    if(update.getMessage().getText().equals("Cambiar a Rider")){
-                        cpPerson.setCarpool(0);
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    String newFirstName = update.getMessage().getText();
+                    validation = isOnlyAlphabeticalCharacters(newFirstName);
+                    if(validation){
+                        cpPerson.setFirstName(newFirstName);
                         cpPersonRepository.save(cpPerson);
                         cpUser.setConversationId(3);
                         cpUserRepository.save(cpUser);
                         response = 3;
                     }
-                    if(update.getMessage().getText().equals("Ver viajes")){
-                        cpUser.setConversationId(6);
-                        cpUserRepository.save(cpUser);
-                        response = 6;
+                    else{
+                        response = 5;
                     }
                     break;
+                case 3:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    response = 3;
+                    if(update.getMessage().getText().equals("Carpooler")){
+                        cpPerson.setCarpool(1);
+                        cpPersonRepository.save(cpPerson);
+                        if(cpPerson.getCellphoneNumber()==null){
+                            response = 6;
+                        }else{
+                            response = 10;
+                        }
+                    }
+                    break;
+                case 6:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    cpPerson.setCellphoneNumber(update.getMessage().getText());
+                    cpPersonRepository.save(cpPerson);
+                    response = 7;
+                    break;
                 case 7:
-                    in = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",in);
-                    //cpCar.setBrand(update.getMessage().getText());
-                    //Here should be register the data obtained to the database for the car brand
-                    cpUser.setConversationId(8);
-                    cpUserRepository.save(cpUser);
-                    response = 8;
-                    break;
-                case 8:
-                    in = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",in);
-                    //cpCar.setModel(update.getMessage().getText());
-                    //Here should be register the data obtained to the database for the car model
-                    cpUser.setConversationId(9);
-                    cpUserRepository.save(cpUser);
-                    response = 9;
-                    break;
-                case 9:
-                    in = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",in);
-                    //cpCar.setEnrollmentNumber(update.getMessage().getText());
-                    //Here should be register the data obtained to the database for the car EnrollmentNumber
-                    cpUser.setConversationId(10);
-                    cpUserRepository.save(cpUser);
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    cpPerson.setCiNumber(update.getMessage().getText());
+                    cpPersonRepository.save(cpPerson);
                     response = 10;
                     break;
                 case 10:
-                    in = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    response = 10;
+                    //Here is the menu for the carpooler
+                    if(update.getMessage().getText().equals("Registrar Vehículo")){
+                        response = 11;
+                    }
+                    if(update.getMessage().getText().equals("Registrar Viaje")){
+                        response = 10;
+                    }
+                    if(update.getMessage().getText().equals("Cambiar a Rider")){
+                        cpPerson.setCarpool(0);
+                        cpPersonRepository.save(cpPerson);
+                        response = 3;
+                    }
+                    if(update.getMessage().getText().equals("Ver viajes")){
+                        response = 10;
+                    }
+                    break;
+                case 11:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    //cpCar.setBrand(update.getMessage().getText());
+                    //Here should be register the data obtained to the database for the car brand
+                    response = 12;
+                    break;
+                case 12:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    //cpCar.setModel(update.getMessage().getText());
+                    //Here should be register the data obtained to the database for the car model
+                    response = 13;
+                    break;
+                case 13:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    //cpCar.setEnrollmentNumber(update.getMessage().getText());
+                    //Here should be register the data obtained to the database for the car EnrollmentNumber
+                    response = 14;
+                    break;
+                case 14:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
                     //cpCar.setCapacity(update.getMessage().getText());
                     //Here should be register the data obtained to the database for the car capacity
-                    cpUser.setConversationId(6);
-                    cpUserRepository.save(cpUser);
-                    response = 6;
+                    response = 10;
                     break;
             }
+            cpUser.setConversationId(response);
+            cpUserRepository.save(cpUser);
         }
         return response;
     }
@@ -207,5 +203,16 @@ public class BotBl {
             response = true;
         }
         return response;
+    }
+    private boolean isOnlyAlphabeticalCharacters(String text){
+        Boolean validation = true;
+        for(int i=0;i<text.length();i++){
+            char ch = text.charAt(i);
+            if(!Character.isLetter(ch) && ch != ' '){
+                validation = false;
+                break;
+            }
+        }
+        return validation;
     }
 }

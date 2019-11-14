@@ -186,28 +186,28 @@ public class MainBot extends TelegramLongPollingBot {
             //****************************************\\
             //Here starts the carpooler part\\
             //****************************************\\
-            case 4:
+            case 6:
                 responses.add("Para ser carpooler debe agregar algunos datos más");
                 responses.add("¿Cuál es su celular?");
                 break;
-            case 5:
+            case 7:
                 responses.add("¿Cuál es su número carnet de identidad?");
                 break;
-            case 6:
+            case 10:
                 responses.add("¿Que desea hacer a continuación?");
                 rkm= createReplyKeyboardCarpooler();
                 break;
-            case 7:
+            case 11:
                 responses.add("Para ser un carpooler registre su vehiculo");
                 responses.add("¿Cuál es la marca del vehículo?");
                 break;
-            case 8:
+            case 12:
                 responses.add("¿Cuál es el modelo?");
                 break;
-            case 9:
+            case 13:
                 responses.add("¿Cuál es la placa?");
                 break;
-            case 10:
+            case 14:
                 responses.add("¿Cuantos pasajeros puede llevar?");
                 break;
 
