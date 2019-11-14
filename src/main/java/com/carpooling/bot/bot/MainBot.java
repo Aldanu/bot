@@ -45,64 +45,8 @@ public class MainBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             int conversation = botBl.processUpdate(update);
-            List<String> responses = new ArrayList<>();
-            ReplyKeyboardMarkup rkm=null;
-            switch (conversation){
-                case 1:
-                    responses.add("Bienvenido a Carpooling Bot");
-                    responses.add("Para usar el ChatBot debes registrarte primero");
-                    responses.add("Ingresa tus apellidos");
-                    break;
-                case 2:
-                    responses.add("Ingresa tu nombre");
-                    break;
-                case 3:
-                    responses.add("Quieres usar la aplicacion como Rider o como Carpooler");
-                    rkm= createReplyKeyboard();
-                    break;
-                case 4:
-                    responses.add("Para ser carpooler debe agregar algunos datos más");
-                    responses.add("¿Cuál es su celular?");
-                    break;
-                case 5:
-                    responses.add("¿Cuál es su número carnet de identidad?");
-                    break;
-                case 6:
-                    responses.add("¿Que desea hacer a continuación?");
-                    rkm= createReplyKeyboardCarpooler();
-                    break;
-                case 7:
-                    responses.add("Para ser un carpooler registre su vehiculo");
-                    responses.add("¿Cuál es la marca del vehículo?");
-                    break;
-                case 8:
-                    responses.add("¿Cuál es el modelo?");
-                    break;
-                case 9:
-                    responses.add("¿Cuál es la placa?");
-                    break;
-                case 10:
-                    responses.add("¿Cuantos pasajeros puede llevar?");
-                    break;
-
-            }
-            for(String messageText: responses) {
-                SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                        .setChatId(update.getMessage().getChatId())
-                        .setText(messageText);
-                if(rkm!=null){
-                    message.setReplyMarkup(rkm);
-                }else{
-                    ReplyKeyboardRemove keyboardMarkupRemove = new ReplyKeyboardRemove();
-                    message.setReplyMarkup(keyboardMarkupRemove);
-                }
-                try {
-                    this.execute(message);
-
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
-            }
+            //switch moved to the response function
+            response(conversation, update);
         }
     }
 
@@ -155,7 +99,7 @@ public class MainBot extends TelegramLongPollingBot {
     }
 
     //Here it send a message to the user and removes  any custom keyboard
-    public void sendMessage(long chat_id, String text){
+    /*public void sendMessage(long chat_id, String text){
         SendMessage message = new SendMessage() // Create a message object object
                 .setChatId(chat_id)
                 .setText(text);
@@ -166,7 +110,7 @@ public class MainBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     //Here the user decides whether it will be a carpooler or a rider and creates a custom keyboard for it
     private ReplyKeyboardMarkup createReplyKeyboard() {
@@ -221,5 +165,69 @@ public class MainBot extends TelegramLongPollingBot {
         keyboardMarkup.setKeyboard(keyboard);
         // Add it to the message
         return keyboardMarkup;
+    }
+
+    public void response(int conversation, Update update){
+        List<String> responses = new ArrayList<>();
+        ReplyKeyboardMarkup rkm=null;
+        switch (conversation){
+            case 1:
+                responses.add("Bienvenido a Carpooling Bot");
+                responses.add("Para usar el ChatBot debes registrarte primero");
+                responses.add("Ingresa tus apellidos");
+                break;
+            case 2:
+                responses.add("Ingresa tu nombre");
+                break;
+            case 3:
+                responses.add("Quieres usar la aplicacion como Rider o como Carpooler");
+                rkm= createReplyKeyboard();
+                break;
+            //****************************************\\
+            //Here starts the carpooler part\\
+            //****************************************\\
+            case 4:
+                responses.add("Para ser carpooler debe agregar algunos datos más");
+                responses.add("¿Cuál es su celular?");
+                break;
+            case 5:
+                responses.add("¿Cuál es su número carnet de identidad?");
+                break;
+            case 6:
+                responses.add("¿Que desea hacer a continuación?");
+                rkm= createReplyKeyboardCarpooler();
+                break;
+            case 7:
+                responses.add("Para ser un carpooler registre su vehiculo");
+                responses.add("¿Cuál es la marca del vehículo?");
+                break;
+            case 8:
+                responses.add("¿Cuál es el modelo?");
+                break;
+            case 9:
+                responses.add("¿Cuál es la placa?");
+                break;
+            case 10:
+                responses.add("¿Cuantos pasajeros puede llevar?");
+                break;
+
+        }
+        for(String messageText: responses) {
+            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+                    .setChatId(update.getMessage().getChatId())
+                    .setText(messageText);
+            if(rkm!=null){
+                message.setReplyMarkup(rkm);
+            }else{
+                ReplyKeyboardRemove keyboardMarkupRemove = new ReplyKeyboardRemove();
+                message.setReplyMarkup(keyboardMarkupRemove);
+            }
+            try {
+                this.execute(message);
+
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
