@@ -129,6 +129,11 @@ public class MainBot extends TelegramLongPollingBot {
         row.add("Rider");
         // Add the second row to the keyboard
         keyboard.add(row);
+        row = new KeyboardRow();
+        // Set each button for the second line
+        row.add("Corregir registro");
+        // Add the second row to the keyboard
+        keyboard.add(row);
         // Set the keyboard to the markup
         keyboardMarkup.setKeyboard(keyboard);
         // Add it to the message
@@ -171,6 +176,9 @@ public class MainBot extends TelegramLongPollingBot {
         List<String> responses = new ArrayList<>();
         ReplyKeyboardMarkup rkm=null;
         switch (conversation){
+            //****************************************\\
+            //Here is the initial registering\\
+            //****************************************\\
             case 1:
                 responses.add("Bienvenido a Carpooling Bot");
                 responses.add("Para usar el ChatBot debes registrarte primero");
@@ -190,7 +198,7 @@ public class MainBot extends TelegramLongPollingBot {
                 responses.add("Ingrese su apellido corregido");
                 break;
             case 5:
-                responses.add("Ingrese si nombre corregido");
+                responses.add("Ingrese su nombre corregido");
                 break;
             //****************************************\\
             //Here starts the carpooler part\\
@@ -202,10 +210,16 @@ public class MainBot extends TelegramLongPollingBot {
             case 7:
                 responses.add("¿Cuál es su número carnet de identidad?");
                 break;
+            //****************************************\\
+            //Here is the Menu for Carpooler\\
+            //****************************************\\
             case 10:
                 responses.add("¿Que desea hacer a continuación?");
                 rkm= createReplyKeyboardCarpooler();
                 break;
+            //****************************************\\
+            //Here is the registering for the car\\
+            //****************************************\\
             case 11:
                 responses.add("Para ser un carpooler registre su vehiculo");
                 responses.add("¿Cuál es la marca del vehículo?");

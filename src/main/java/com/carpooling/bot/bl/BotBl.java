@@ -47,6 +47,9 @@ public class BotBl {
             int last_conversation = cpUser.getConversationId();
             //What happens when chatbot receives a response to a conversation "last conversation"
             switch (last_conversation){
+                //****************************************\\
+                //Here is the initial registering\\
+                //****************************************\\
                 case 1:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
@@ -99,7 +102,18 @@ public class BotBl {
                             response = 10;
                         }
                     }
+                    if(update.getMessage().getText().equals("Rider")){
+                        cpPerson.setCarpool(0);
+                        cpPersonRepository.save(cpPerson);
+                        response=3;
+                    }
+                    if(update.getMessage().getText().equals("Corregir registro")){
+                        response = 4;
+                    }
                     break;
+                //****************************************\\
+                //Here the user can correct its mistakes on the registering\\
+                //****************************************\\
                 case 4:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
@@ -108,10 +122,8 @@ public class BotBl {
                     do{
                         cpPerson.setLastName(LastName);
                         cpPersonRepository.save(cpPerson);
-                        cpUser.setConversationId(3);
-                        cpUserRepository.save(cpUser);
-                        response = 3;
-                    }while(isOnlyAlphabeticalCharacters(LastName));
+                        response = 5;
+                    }while(!isOnlyAlphabeticalCharacters(LastName));
                     break;
                 case 5:
                     idUser = cpUser.getPersonId().getPersonId();
@@ -121,11 +133,12 @@ public class BotBl {
                     do{
                         cpPerson.setFirstName(FirstName);
                         cpPersonRepository.save(cpPerson);
-                        cpUser.setConversationId(3);
-                        cpUserRepository.save(cpUser);
                         response = 3;
-                    }while(isOnlyAlphabeticalCharacters(FirstName));
+                    }while(!isOnlyAlphabeticalCharacters(FirstName));
                     break;
+                //****************************************\\
+                //Here starts the carpooler part\\
+                //****************************************\\
                 case 6:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
@@ -142,6 +155,9 @@ public class BotBl {
                     cpPersonRepository.save(cpPerson);
                     response = 10;
                     break;
+                //****************************************\\
+                //Here is the Menu for Carpooler\\
+                //****************************************\\
                 case 10:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
@@ -163,6 +179,9 @@ public class BotBl {
                         response = 10;
                     }
                     break;
+                //****************************************\\
+                //Here is the registering for the car\\
+                //****************************************\\
                 case 11:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
