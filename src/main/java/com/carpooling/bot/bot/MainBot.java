@@ -184,6 +184,15 @@ public class MainBot extends TelegramLongPollingBot {
                 rkm= createReplyKeyboard();
                 break;
             //****************************************\\
+            //Here the user can correct its mistakes on the registering\\
+            //****************************************\\
+            case 4:
+                responses.add("Ingrese su apellido corregido");
+                break;
+            case 5:
+                responses.add("Ingrese si nombre corregido");
+                break;
+            //****************************************\\
             //Here starts the carpooler part\\
             //****************************************\\
             case 6:

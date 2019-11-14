@@ -100,6 +100,32 @@ public class BotBl {
                         }
                     }
                     break;
+                case 4:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    String LastName = update.getMessage().getText();
+                    do{
+                        cpPerson.setLastName(LastName);
+                        cpPersonRepository.save(cpPerson);
+                        cpUser.setConversationId(3);
+                        cpUserRepository.save(cpUser);
+                        response = 3;
+                    }while(isOnlyAlphabeticalCharacters(LastName));
+                    break;
+                case 5:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    String FirstName = update.getMessage().getText();
+                    do{
+                        cpPerson.setFirstName(FirstName);
+                        cpPersonRepository.save(cpPerson);
+                        cpUser.setConversationId(3);
+                        cpUserRepository.save(cpUser);
+                        response = 3;
+                    }while(isOnlyAlphabeticalCharacters(FirstName));
+                    break;
                 case 6:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
