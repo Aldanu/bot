@@ -68,16 +68,20 @@ public class MainBot extends TelegramLongPollingBot {
                     responses.add("¿Cuál es su número carnet de identidad?");
                     break;
                 case 6:
+                    responses.add("¿Que desea hacer a continuación?");
+                    rkm= createReplyKeyboardCarpooler();
+                    break;
+                case 7:
                     responses.add("Para ser un carpooler registre su vehiculo");
                     responses.add("¿Cuál es la marca del vehículo?");
                     break;
-                case 7:
+                case 8:
                     responses.add("¿Cuál es el modelo?");
                     break;
-                case 8:
+                case 9:
                     responses.add("¿Cuál es la placa?");
                     break;
-                case 9:
+                case 10:
                     responses.add("¿Cuantos pasajeros puede llevar?");
                     break;
 
@@ -187,4 +191,35 @@ public class MainBot extends TelegramLongPollingBot {
         return keyboardMarkup;
     }
 
+    private ReplyKeyboardMarkup createReplyKeyboardCarpooler() {
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        // Create the keyboard (list of keyboard rows)
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        // Create a keyboard row
+        KeyboardRow row = new KeyboardRow();
+        // Set each button, you can also use KeyboardButton objects if you need something else than text
+        row.add("Registrar Vehículo");
+        // Add the first row to the keyboard
+        keyboard.add(row);
+        // Create another keyboard row
+        row = new KeyboardRow();
+        // Set each button for the second line
+        row.add("Registrar Viaje");
+        // Add the second row to the keyboard
+        keyboard.add(row);
+        row = new KeyboardRow();
+        // Set each button for the second line
+        row.add("Cambiar a Rider");
+        // Add the second row to the keyboard
+        keyboard.add(row);
+        row = new KeyboardRow();
+        // Set each button for the second line
+        row.add("Ver viajes");
+        // Add the second row to the keyboard
+        keyboard.add(row);
+        // Set the keyboard to the markup
+        keyboardMarkup.setKeyboard(keyboard);
+        // Add it to the message
+        return keyboardMarkup;
+    }
 }

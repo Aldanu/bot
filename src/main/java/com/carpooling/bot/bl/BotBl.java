@@ -1,6 +1,8 @@
 package com.carpooling.bot.bl;
+import com.carpooling.bot.dao.CpCarRepository;
 import com.carpooling.bot.dao.CpPersonRepository;
 import com.carpooling.bot.dao.CpUserRepository;
+import com.carpooling.bot.domain.CpCar;
 import com.carpooling.bot.domain.CpPerson;
 import com.carpooling.bot.domain.CpUser;
 import com.carpooling.bot.dto.Status;
@@ -21,10 +23,12 @@ public class BotBl {
     private static final Logger LOGGER = LoggerFactory.getLogger(BotBl.class);
     private CpUserRepository cpUserRepository;
     private CpPersonRepository cpPersonRepository;
+    private CpCarRepository cpCarRepository;
     @Autowired
-    public BotBl(CpUserRepository cpUserRepository, CpPersonRepository cpPersonRepository) {
+    public BotBl(CpUserRepository cpUserRepository, CpPersonRepository cpPersonRepository, CpCarRepository cpCarRepository) {
         this.cpUserRepository = cpUserRepository;
         this.cpPersonRepository = cpPersonRepository;
+        this.cpCarRepository= cpCarRepository;
     }
 
     //This method process and update when a user is send a message to the chatbot
@@ -96,10 +100,35 @@ public class BotBl {
                     response = 3;
                     break;
                 case 6:
-
+                    in = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    cpPerson = cpPersonRepository.findById(in).get();
                     response = 6;
+                    if(update.getMessage().getText().equals("Registrar Vehículo")){
+                        cpUser.setConversationId(4);
+                        cpUserRepository.save(cpUser);
+                        response = 7;
+                    }
+                    if(update.getMessage().getText().equals("Registrar Viaje")){
+                        cpUser.setConversationId(4);
+                        cpUserRepository.save(cpUser);
+                        response = 6;
+                    }
+                    if(update.getMessage().getText().equals("Cambiar a Rider")){
+                        cpPerson.setCarpool(0);
+                        cpPersonRepository.save(cpPerson);
+                        cpUser.setConversationId(3);
+                        cpUserRepository.save(cpUser);
+                        response = 3;
+                    }
+                    if(update.getMessage().getText().equals("Ver viajes")){
+                        cpUser.setConversationId(4);
+                        cpUserRepository.save(cpUser);
+                        response = 6;
+                    }
                     break;
                 case 7:
+
 
                     response = 8;
                     break;
