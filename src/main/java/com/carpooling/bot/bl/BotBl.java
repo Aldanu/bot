@@ -6,6 +6,7 @@ import com.carpooling.bot.domain.CpCar;
 import com.carpooling.bot.domain.CpPerson;
 import com.carpooling.bot.domain.CpUser;
 import com.carpooling.bot.dto.Status;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class BotBl {
             response = 1;
         }
         else{
+            Boolean validation;
+            String newLastName,newFirstName;
             Integer idUser;
             CpCar cpCar;
             CpPerson cpPerson;
@@ -54,19 +57,15 @@ public class BotBl {
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
                     cpPerson = cpPersonRepository.findById(idUser).get();
-                    String newLastName = update.getMessage().getText();
+                    newLastName = update.getMessage().getText();
                     //See if the Last name only has alphabetical Letters and spaces
-                    Boolean validation = isOnlyAlphabeticalCharacters(newLastName);
+                    validation = isOnlyAlphabeticalCharacters(newLastName);
                     if(validation){
                         cpPerson.setLastName(newLastName);
                         cpPersonRepository.save(cpPerson);
-                        cpUser.setConversationId(2);
-                        cpUserRepository.save(cpUser);
                         response = 2;
                     }
                     else{
-                        cpUser.setConversationId(4);
-                        cpUserRepository.save(cpUser);
                         response = 4;
                     }
 
@@ -75,13 +74,11 @@ public class BotBl {
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
                     cpPerson = cpPersonRepository.findById(idUser).get();
-                    String newFirstName = update.getMessage().getText();
+                    newFirstName = update.getMessage().getText();
                     validation = isOnlyAlphabeticalCharacters(newFirstName);
                     if(validation){
                         cpPerson.setFirstName(newFirstName);
                         cpPersonRepository.save(cpPerson);
-                        cpUser.setConversationId(3);
-                        cpUserRepository.save(cpUser);
                         response = 3;
                     }
                     else{
@@ -94,17 +91,18 @@ public class BotBl {
                     cpPerson = cpPersonRepository.findById(idUser).get();
                     response = 3;
                     if(update.getMessage().getText().equals("Carpooler")){
-                        cpPerson.setCarpool(1);
-                        cpPersonRepository.save(cpPerson);
-                        if(cpPerson.getCellphoneNumber()==null){
+                        //When a user is not a carpooler in the chatbot
+                        if(cpPerson.getCarpool()==0){
                             response = 6;
-                        }else{
+                        }
+                        //When a user is a carpooler in the chatbot
+                        else{
                             response = 10;
                         }
+                        cpPerson.setCarpool(1);
+                        cpPersonRepository.save(cpPerson);
                     }
                     if(update.getMessage().getText().equals("Rider")){
-                        cpPerson.setCarpool(0);
-                        cpPersonRepository.save(cpPerson);
                         response=3;
                     }
                     if(update.getMessage().getText().equals("Corregir registro")){
@@ -115,26 +113,35 @@ public class BotBl {
                 //Here the user can correct its mistakes on the registering\\
                 //****************************************\\
                 case 4:
+                    //Try again to enter Last Name
                     idUser = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
                     cpPerson = cpPersonRepository.findById(idUser).get();
-                    String LastName = update.getMessage().getText();
-                    do{
-                        cpPerson.setLastName(LastName);
+                    newLastName = update.getMessage().getText();
+                    validation = isOnlyAlphabeticalCharacters(newLastName);
+                    if(validation){
+                        cpPerson.setLastName(newLastName);
                         cpPersonRepository.save(cpPerson);
-                        response = 5;
-                    }while(!isOnlyAlphabeticalCharacters(LastName));
+                        response = 2;
+                    }
+                    else{
+
+                        response = 4;
+                    }
                     break;
                 case 5:
+                    //Try again to enter First Name
                     idUser = cpUser.getPersonId().getPersonId();
-                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
                     cpPerson = cpPersonRepository.findById(idUser).get();
-                    String FirstName = update.getMessage().getText();
-                    do{
-                        cpPerson.setFirstName(FirstName);
+                    newFirstName = update.getMessage().getText();
+                    validation = isOnlyAlphabeticalCharacters(newFirstName);
+                    if(validation){
+                        cpPerson.setFirstName(newFirstName);
                         cpPersonRepository.save(cpPerson);
                         response = 3;
-                    }while(!isOnlyAlphabeticalCharacters(FirstName));
+                    }
+                    else{
+                        response = 5;
+                    }
                     break;
                 //****************************************\\
                 //Here starts the carpooler part\\

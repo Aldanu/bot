@@ -195,10 +195,12 @@ public class MainBot extends TelegramLongPollingBot {
             //Here the user can correct its mistakes on the registering\\
             //****************************************\\
             case 4:
-                responses.add("Ingrese su apellido corregido");
+                responses.add("Ingrese nuevamente sus apellidos");
+                responses.add("Recuerde solo puede usar letras del alfabeto mayusculas y minusculas, ademas de espacios.");
                 break;
             case 5:
-                responses.add("Ingrese su nombre corregido");
+                responses.add("Ingrese nuevamente sus nombres");
+                responses.add("Recuerde solo puede usar letras del alfabeto mayusculas y minusculas, ademas de espacios.");
                 break;
             //****************************************\\
             //Here starts the carpooler part\\
