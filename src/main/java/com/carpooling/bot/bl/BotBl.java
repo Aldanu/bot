@@ -74,9 +74,15 @@ public class BotBl {
                     if(update.getMessage().getText().equals("Carpooler")){
                         cpPerson.setCarpool(1);
                         cpPersonRepository.save(cpPerson);
-                        cpUser.setConversationId(4);
-                        cpUserRepository.save(cpUser);
-                        response = 4;
+                        if(cpPerson.getCellphoneNumber()==null){
+                            cpUser.setConversationId(4);
+                            cpUserRepository.save(cpUser);
+                            response = 4;
+                        }else{
+                            cpUser.setConversationId(6);
+                            cpUserRepository.save(cpUser);
+                            response = 6;
+                        }
                     }
                     break;
                 case 4:
@@ -105,6 +111,7 @@ public class BotBl {
                     LOGGER.info("Buscando el id {} en CpPerson",in);
                     cpPerson = cpPersonRepository.findById(in).get();
                     response = 6;
+                    //Here is the menu for the carpooler
                     if(update.getMessage().getText().equals("Registrar Vehículo")){
                         cpUser.setConversationId(7);
                         cpUserRepository.save(cpUser);
@@ -132,7 +139,7 @@ public class BotBl {
                     in = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",in);
                     //cpCar.setBrand(update.getMessage().getText());
-
+                    //Here should be register the data obtained to the database for the car brand
                     cpUser.setConversationId(8);
                     cpUserRepository.save(cpUser);
                     response = 8;
@@ -141,7 +148,7 @@ public class BotBl {
                     in = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",in);
                     //cpCar.setModel(update.getMessage().getText());
-
+                    //Here should be register the data obtained to the database for the car model
                     cpUser.setConversationId(9);
                     cpUserRepository.save(cpUser);
                     response = 9;
@@ -150,7 +157,7 @@ public class BotBl {
                     in = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",in);
                     //cpCar.setEnrollmentNumber(update.getMessage().getText());
-
+                    //Here should be register the data obtained to the database for the car EnrollmentNumber
                     cpUser.setConversationId(10);
                     cpUserRepository.save(cpUser);
                     response = 10;
@@ -159,13 +166,12 @@ public class BotBl {
                     in = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",in);
                     //cpCar.setCapacity(update.getMessage().getText());
-
+                    //Here should be register the data obtained to the database for the car capacity
                     cpUser.setConversationId(6);
                     cpUserRepository.save(cpUser);
                     response = 6;
                     break;
             }
-
         }
         return response;
     }
