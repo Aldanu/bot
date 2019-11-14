@@ -150,6 +150,9 @@ public class MainBot extends TelegramLongPollingBot {
         row.add("Registrar Vehículo");
         // Add the first row to the keyboard
         keyboard.add(row);
+        row = new KeyboardRow();
+        row.add("Ver Vehículos");
+        keyboard.add(row);
         // Create another keyboard row
         row = new KeyboardRow();
         // Set each button for the second line
@@ -158,12 +161,12 @@ public class MainBot extends TelegramLongPollingBot {
         keyboard.add(row);
         row = new KeyboardRow();
         // Set each button for the second line
-        row.add("Cambiar a Rider");
+        row.add("Ver Viajes");
         // Add the second row to the keyboard
         keyboard.add(row);
         row = new KeyboardRow();
         // Set each button for the second line
-        row.add("Ver viajes");
+        row.add("Volver al Menú Principal");
         // Add the second row to the keyboard
         keyboard.add(row);
         // Set the keyboard to the markup
@@ -211,6 +214,12 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 7:
                 responses.add("¿Cuál es su número carnet de identidad?");
+                break;
+            case 8:
+                responses.add("Ingrese un numero de celular válido");
+                break;
+            case 9:
+                responses.add("Ingrese un numero de carnet de identidad válido");
                 break;
             //****************************************\\
             //Here is the Menu for Carpooler\\

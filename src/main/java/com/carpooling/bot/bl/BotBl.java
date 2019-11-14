@@ -42,7 +42,7 @@ public class BotBl {
         }
         else{
             Boolean validation;
-            String newLastName,newFirstName;
+            String newLastName,newFirstName,newCellphone,newCI;
             Integer idUser;
             CpCar cpCar;
             CpPerson cpPerson;
@@ -150,17 +150,55 @@ public class BotBl {
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
                     cpPerson = cpPersonRepository.findById(idUser).get();
-                    cpPerson.setCellphoneNumber(update.getMessage().getText());
-                    cpPersonRepository.save(cpPerson);
-                    response = 7;
+                    newCellphone = update.getMessage().getText();
+                    if(isValidCellphone(newCellphone)){
+                        cpPerson.setCellphoneNumber(update.getMessage().getText());
+                        cpPersonRepository.save(cpPerson);
+                        response = 7;
+                    }
+                    else{
+                        response = 8;
+                    }
                     break;
                 case 7:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
                     cpPerson = cpPersonRepository.findById(idUser).get();
-                    cpPerson.setCiNumber(update.getMessage().getText());
-                    cpPersonRepository.save(cpPerson);
-                    response = 10;
+                    newCI = update.getMessage().getText();
+                    if(isValidCI(newCI)){
+                        cpPerson.setCiNumber(newCI);
+                        cpPersonRepository.save(cpPerson);
+                        response = 10;
+                    }
+                    else{
+                        response = 9;
+                    }
+                    break;
+                case 8:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    newCellphone = update.getMessage().getText();
+                    if(isValidCellphone(newCellphone)){
+                        cpPerson.setCellphoneNumber(update.getMessage().getText());
+                        cpPersonRepository.save(cpPerson);
+                        response = 7;
+                    }
+                    else{
+                        response = 8;
+                    }
+                    break;
+                case 9:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    newCI = update.getMessage().getText();
+                    if(isValidCI(newCI)){
+                        cpPerson.setCiNumber(newCI);
+                        cpPersonRepository.save(cpPerson);
+                        response = 10;
+                    }
+                    else{
+                        response = 9;
+                    }
                     break;
                 //****************************************\\
                 //Here is the Menu for Carpooler\\
@@ -172,18 +210,19 @@ public class BotBl {
                     response = 10;
                     //Here is the menu for the carpooler
                     if(update.getMessage().getText().equals("Registrar Vehículo")){
-                        response = 11;
+                        response = 10;
+                    }
+                    if(update.getMessage().getText().equals("Ver Vehículos")){
+                        response = 10;
                     }
                     if(update.getMessage().getText().equals("Registrar Viaje")){
                         response = 10;
                     }
-                    if(update.getMessage().getText().equals("Cambiar a Rider")){
-                        cpPerson.setCarpool(0);
-                        cpPersonRepository.save(cpPerson);
-                        response = 3;
-                    }
                     if(update.getMessage().getText().equals("Ver viajes")){
                         response = 10;
+                    }
+                    if(update.getMessage().getText().equals("Volver al Menú Principal")){
+                        response = 3;
                     }
                     break;
                 //****************************************\\
@@ -256,6 +295,17 @@ public class BotBl {
         }
         return response;
     }
+    private boolean isOnlySpaces(String text){
+        Boolean validation = true;
+        for(int i=0;i<text.length();i++){
+            char ch = text.charAt(i);
+            if(ch != ' '){
+                validation = false;
+            }
+            break;
+        }
+        return validation;
+    }
     private boolean isOnlyAlphabeticalCharacters(String text){
         Boolean validation = true;
         for(int i=0;i<text.length();i++){
@@ -264,6 +314,50 @@ public class BotBl {
                 validation = false;
                 break;
             }
+        }
+        if(isOnlySpaces(text)){
+            validation = false;
+        }
+        return validation;
+    }
+    private boolean isValidCellphone(String text){
+        Boolean validation = true;
+        for(int i=0;i<text.length();i++){
+            char ch = text.charAt(i);
+            if(!Character.isDigit(ch)){
+                validation = false;
+            }
+        }
+        if(isOnlySpaces(text)){
+            validation = false;
+        }
+        if(text.length()!=8){
+            validation = false;
+        }
+        if(text.charAt(0)!='6' && text.charAt(0)!='7'){
+            validation = false;
+        }
+        return validation;
+    }
+    private boolean isValidCI(String text){
+        //7-8 numbers or 7-8 numbers plus a alphabetical character
+        Boolean validation = true;
+        int lenght = text.length();
+        char lastCharacter = text.charAt(lenght-1);
+        if(Character.isDigit(lastCharacter) || Character.isAlphabetic(lastCharacter)){
+            for(int i=0;i<lenght-1;i++){
+                char ch = text.charAt(i);
+                if(!Character.isDigit(ch)){
+                    validation = false;
+                    break;
+                }
+            }
+        }
+        else{
+            validation = false;
+        }
+        if(isOnlySpaces(text)){
+            validation = false;
         }
         return validation;
     }
