@@ -41,6 +41,7 @@ public class BotBl {
         }
         else{
             Integer in;
+            CpCar cpCar;
             CpPerson cpPerson;
             CpUser cpUser = cpUserRepository.findByBotUserId(update.getMessage().getFrom().getId().toString());
             int last_conversation = cpUser.getConversationId();
@@ -97,7 +98,7 @@ public class BotBl {
                     cpPersonRepository.save(cpPerson);
                     cpUser.setConversationId(6);
                     cpUserRepository.save(cpUser);
-                    response = 3;
+                    response = 6;
                     break;
                 case 6:
                     in = cpUser.getPersonId().getPersonId();
@@ -105,12 +106,12 @@ public class BotBl {
                     cpPerson = cpPersonRepository.findById(in).get();
                     response = 6;
                     if(update.getMessage().getText().equals("Registrar Vehículo")){
-                        cpUser.setConversationId(4);
+                        cpUser.setConversationId(7);
                         cpUserRepository.save(cpUser);
                         response = 7;
                     }
                     if(update.getMessage().getText().equals("Registrar Viaje")){
-                        cpUser.setConversationId(4);
+                        cpUser.setConversationId(6);
                         cpUserRepository.save(cpUser);
                         response = 6;
                     }
@@ -122,22 +123,46 @@ public class BotBl {
                         response = 3;
                     }
                     if(update.getMessage().getText().equals("Ver viajes")){
-                        cpUser.setConversationId(4);
+                        cpUser.setConversationId(6);
                         cpUserRepository.save(cpUser);
                         response = 6;
                     }
                     break;
                 case 7:
+                    in = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    //cpCar.setBrand(update.getMessage().getText());
 
-
+                    cpUser.setConversationId(8);
+                    cpUserRepository.save(cpUser);
                     response = 8;
                     break;
                 case 8:
+                    in = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    //cpCar.setModel(update.getMessage().getText());
 
+                    cpUser.setConversationId(9);
+                    cpUserRepository.save(cpUser);
                     response = 9;
                     break;
                 case 9:
-                    response = 9;
+                    in = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    //cpCar.setEnrollmentNumber(update.getMessage().getText());
+
+                    cpUser.setConversationId(10);
+                    cpUserRepository.save(cpUser);
+                    response = 10;
+                    break;
+                case 10:
+                    in = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",in);
+                    //cpCar.setCapacity(update.getMessage().getText());
+
+                    cpUser.setConversationId(6);
+                    cpUserRepository.save(cpUser);
+                    response = 6;
                     break;
             }
 
