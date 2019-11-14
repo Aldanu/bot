@@ -8,6 +8,7 @@ import com.carpooling.bot.dto.Status;
 import com.carpooling.bot.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.ArrayList;
@@ -37,6 +38,10 @@ public class UserBl {
         }
     }
 
+    public CpUser findUserByTelegramUserId(Update update){
+        CpUser cpUser = cpUserRepository.findByBotUserId(update.getMessage().getFrom().getId().toString());
+        return cpUser;
+    }
     /*public List<UserDto> findAllPeople() {
         List<UserDto> userDtoList = new ArrayList<>();
         for (CpUser cpUser:cpUserRepository.findAllByStatus(Status.ACTIVE.getStatus())) {

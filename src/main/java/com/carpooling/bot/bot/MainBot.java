@@ -4,7 +4,12 @@ package com.carpooling.bot.bot;
 import com.carpooling.bot.CarpoolingBot;
 import com.carpooling.bot.bl.BotBl;
 import com.carpooling.bot.bl.CarBl;
+import com.carpooling.bot.bl.PersonBl;
 import com.carpooling.bot.bl.UserBl;
+import com.carpooling.bot.dao.CpCarRepository;
+import com.carpooling.bot.domain.CpCar;
+import com.carpooling.bot.domain.CpPerson;
+import com.carpooling.bot.domain.CpUser;
 import com.carpooling.bot.dto.CarDto;
 import com.carpooling.bot.dto.PersonDto;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -26,6 +31,7 @@ public class MainBot extends TelegramLongPollingBot {
     private BotBl botBl;
     private CarBl carBl;
     private UserBl userBl;
+    private PersonBl personBl;
     //This both classes should be changed to an array in order to allow multiuser saving data
     public static CarDto cardto=new CarDto();
     public static PersonDto personDto=new PersonDto();
@@ -35,10 +41,11 @@ public class MainBot extends TelegramLongPollingBot {
 
     private final static Logger LOGGER = Logger.getLogger(CarpoolingBot.class.getName());
 
-    public MainBot(BotBl botBl, CarBl carBl, UserBl userBl){
+    public MainBot(BotBl botBl, CarBl carBl, UserBl userBl,PersonBl personBl){
         this.botBl = botBl;
         this.carBl = carBl;
         this.userBl = userBl;
+        this.personBl = personBl;
     }
 
     @Override
@@ -139,7 +146,23 @@ public class MainBot extends TelegramLongPollingBot {
         // Add it to the message
         return keyboardMarkup;
     }
+    private ReplyKeyboardMarkup createOkMenu(){
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        // Create the keyboard (list of keyboard rows)
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        // Create a keyboard row
+        KeyboardRow row = new KeyboardRow();
+        // Set each button, you can also use KeyboardButton objects if you need something else than text
+        row.add("OK");
+        // Add the first row to the keyboard
+        keyboard.add(row);
+        // Create another keyboard row
+        // Set the keyboard to the markup
+        keyboardMarkup.setKeyboard(keyboard);
+        // Add it to the message
+        return keyboardMarkup;
 
+    }
     private ReplyKeyboardMarkup createReplyKeyboardCarpooler() {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         // Create the keyboard (list of keyboard rows)
@@ -232,17 +255,45 @@ public class MainBot extends TelegramLongPollingBot {
             //Here is the registering for the car\\
             //****************************************\\
             case 11:
-                responses.add("Para ser un carpooler registre su vehiculo");
+                responses.add("Iniciando Registro de Vehiculo");
                 responses.add("¿Cuál es la marca del vehículo?");
                 break;
             case 12:
                 responses.add("¿Cuál es el modelo?");
                 break;
             case 13:
-                responses.add("¿Cuál es la placa?");
+                responses.add("¿Cuál es la placa? Bajo el siguiente formato NNNN-LLL");
+                responses.add("N representa un numero y L una letra");
+                responses.add("Si su placa tiene menos de 4 numeros completelo con 0 a la izquierda");
                 break;
             case 14:
                 responses.add("¿Cuantos pasajeros puede llevar?");
+                break;
+            case 15:
+                responses.add("Ingresa una marca válida, solo debe contener letras y números");
+                break;
+            case 16:
+                responses.add("Ingrese un modelo valido, solo debe contener letras y numeros");
+                break;
+            case 17:
+                responses.add("Ingrese una placa valida bajo el siguiente formato NNNN-LLL");
+                responses.add("N representa un numero y L una letra");
+                responses.add("Si su placa tiene menos de 4 numeros completelo con 0 a la izquierda");
+                break;
+            case 18:
+                responses.add("Ingrese un numero de pasajeros correcto");
+                break;
+            case 19:
+                responses.add("Listado de tus vehiculos");
+                CpUser cpUser = userBl.findUserByTelegramUserId(update);
+                CpPerson cpPerson = personBl.findPersonById(cpUser.getPersonId().getPersonId());
+                List<CpCar> all = carBl.all();
+                for(CpCar car: all){
+                    if(car.getPersonId().getPersonId() == cpPerson.getPersonId()){
+                        responses.add(car.toString());
+                    }
+                }
+                rkm= createOkMenu();
                 break;
 
         }

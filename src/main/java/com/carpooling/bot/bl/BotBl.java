@@ -41,10 +41,11 @@ public class BotBl {
             response = 1;
         }
         else{
+            List<CpCar> allCars;
             Boolean validation;
-            String newLastName,newFirstName,newCellphone,newCI;
+            String newLastName,newFirstName,newCellphone,newCI,newBrand,newModel,newEnrollmentNumber,newPassenger;
             Integer idUser;
-            CpCar cpCar;
+            CpCar newCar;
             CpPerson cpPerson;
             CpUser cpUser = cpUserRepository.findByBotUserId(update.getMessage().getFrom().getId().toString());
             int last_conversation = cpUser.getConversationId();
@@ -152,7 +153,7 @@ public class BotBl {
                     cpPerson = cpPersonRepository.findById(idUser).get();
                     newCellphone = update.getMessage().getText();
                     if(isValidCellphone(newCellphone)){
-                        cpPerson.setCellphoneNumber(update.getMessage().getText());
+                        cpPerson.setCellphoneNumber(newCellphone);
                         cpPersonRepository.save(cpPerson);
                         response = 7;
                     }
@@ -179,7 +180,7 @@ public class BotBl {
                     cpPerson = cpPersonRepository.findById(idUser).get();
                     newCellphone = update.getMessage().getText();
                     if(isValidCellphone(newCellphone)){
-                        cpPerson.setCellphoneNumber(update.getMessage().getText());
+                        cpPerson.setCellphoneNumber(newCellphone);
                         cpPersonRepository.save(cpPerson);
                         response = 7;
                     }
@@ -210,10 +211,10 @@ public class BotBl {
                     response = 10;
                     //Here is the menu for the carpooler
                     if(update.getMessage().getText().equals("Registrar Vehículo")){
-                        response = 10;
+                        response = 11;
                     }
                     if(update.getMessage().getText().equals("Ver Vehículos")){
-                        response = 10;
+                        response = 19;
                     }
                     if(update.getMessage().getText().equals("Registrar Viaje")){
                         response = 10;
@@ -231,29 +232,134 @@ public class BotBl {
                 case 11:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
-                    //cpCar.setBrand(update.getMessage().getText());
-                    //Here should be register the data obtained to the database for the car brand
-                    response = 12;
+                    newBrand = update.getMessage().getText();
+                    if(isOnlyAlphaNumeric(newBrand)){
+                        newCar = new CpCar();
+                        newCar.setPersonId(cpUser.getPersonId());
+                        newCar.setBrand(newBrand);
+                        newCar.setEnrollmentNumber("NULL");
+                        newCar.setModel("NULL");
+                        newCar.setCapacity(0);
+                        newCar.setStatus(1);
+                        newCar.setTxHost("localhost");
+                        newCar.setTxUser("admin");
+                        newCar.setTxDate(new Date());
+                        cpCarRepository.save(newCar);
+                        response = 12;
+                    }
+                    else{
+                        response = 15;
+                    }
                     break;
                 case 12:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
-                    //cpCar.setModel(update.getMessage().getText());
-                    //Here should be register the data obtained to the database for the car model
-                    response = 13;
+                    newModel = update.getMessage().getText();
+                    if(isOnlyAlphaNumeric(newModel)){
+                        allCars = cpCarRepository.findAll();
+                        newCar = getLastCar(allCars,idUser);
+                        newCar.setModel(newModel);
+                        cpCarRepository.save(newCar);
+                        response = 13;
+                    }
+                    else{
+                        response = 16;
+                    }
                     break;
                 case 13:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
-                    //cpCar.setEnrollmentNumber(update.getMessage().getText());
-                    //Here should be register the data obtained to the database for the car EnrollmentNumber
-                    response = 14;
+                    newEnrollmentNumber = update.getMessage().getText();
+                    if(isEnrollmentNumberValid(newEnrollmentNumber)){
+                        allCars = cpCarRepository.findAll();
+                        newCar = getLastCar(allCars,idUser);
+                        newCar.setEnrollmentNumber(newEnrollmentNumber);
+                        cpCarRepository.save(newCar);
+                        response = 14;
+                    }
+                    else{
+                        response = 17;
+                    }
                     break;
                 case 14:
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
-                    //cpCar.setCapacity(update.getMessage().getText());
-                    //Here should be register the data obtained to the database for the car capacity
+                    newPassenger = update.getMessage().getText();
+                    if(isOnlyNumbers(newPassenger)) {
+                        allCars = cpCarRepository.findAll();
+                        newCar = getLastCar(allCars, idUser);
+                        newCar.setCapacity(Integer.parseInt(newPassenger));
+                        cpCarRepository.save(newCar);
+                        response = 10;
+                    }
+                    else{
+                        response = 18;
+                    }
+                    break;
+                case 15:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    newBrand = update.getMessage().getText();
+                    if(isOnlyAlphaNumeric(newBrand)){
+                        newCar = new CpCar();
+                        newCar.setPersonId(cpUser.getPersonId());
+                        newCar.setBrand(newBrand);
+                        newCar.setEnrollmentNumber("NULL");
+                        newCar.setModel("NULL");
+                        newCar.setCapacity(0);
+                        newCar.setStatus(1);
+                        newCar.setTxHost("localhost");
+                        newCar.setTxUser("admin");
+                        newCar.setTxDate(new Date());
+                        cpCarRepository.save(newCar);
+                        response = 12;
+                    }
+                    else{
+                        response = 15;
+                    }
+                    break;
+                case 16:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    newModel = update.getMessage().getText();
+                    if(isOnlyAlphaNumeric(newModel)){
+                        allCars = cpCarRepository.findAll();
+                        newCar = getLastCar(allCars,idUser);
+                        newCar.setModel(newModel);
+                        cpCarRepository.save(newCar);
+                        response = 13;
+                    }
+                    else{
+                        response = 16;
+                    }
+                    break;
+                case 17:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    newEnrollmentNumber = update.getMessage().getText();
+                    if(isEnrollmentNumberValid(newEnrollmentNumber)){
+                        allCars = cpCarRepository.findAll();
+                        newCar = getLastCar(allCars,idUser);
+                        newCar.setEnrollmentNumber(newEnrollmentNumber);
+                        cpCarRepository.save(newCar);
+                        response = 14;
+                    }
+                    else{
+                        response = 17;
+                    }
+                    break;
+                case 18:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    newPassenger = update.getMessage().getText();
+                    if(isOnlyNumbers(newPassenger)) {
+                        allCars = cpCarRepository.findAll();
+                        newCar = getLastCar(allCars, idUser);
+                        newCar.setCapacity(Integer.parseInt(newPassenger));
+                        cpCarRepository.save(newCar);
+                        response = 10;
+                    }
+                    else{
+                        response = 18;
+                    }
+                    break;
+                case 19:
                     response = 10;
                     break;
             }
@@ -358,6 +464,61 @@ public class BotBl {
         }
         if(isOnlySpaces(text)){
             validation = false;
+        }
+        return validation;
+    }
+    private CpCar getLastCar(List<CpCar> all, Integer idUser){
+        CpCar lastCar = null;
+        for(CpCar car: all){
+            if(car.getPersonId().getPersonId() == idUser && car.getStatus()==1){
+                lastCar = car;
+            }
+        }
+        return  lastCar;
+    }
+    private boolean isOnlyAlphaNumeric(String text){
+        boolean validation = true;
+        for(int i=0;i<text.length();i++){
+            char ch = text.charAt(i);
+            if(!Character.isAlphabetic(ch) && !Character.isDigit(ch)){
+                validation = false;
+                break;
+            }
+        }
+        return validation;
+    }
+    private boolean isEnrollmentNumberValid(String text){
+        boolean validation = true;
+        int lenght = text.length();
+        if(lenght==8){
+            if(text.charAt(4) != '-'){
+                validation = false;
+            }
+            for(int i=0;i<4;i++){
+                if(!Character.isDigit(text.charAt(i))){
+                    validation = false;
+                    break;
+                }
+            }
+            for(int i=5;i<8;i++){
+                if(!Character.isAlphabetic(text.charAt(i))){
+                    validation = false;
+                    break;
+                }
+            }
+        }
+        else{
+            validation = false;
+        }
+        return  validation;
+    }
+    private  boolean isOnlyNumbers(String text){
+        boolean validation = true;
+        for(int i=0;i<text.length();i++){
+            if(!Character.isDigit(text.charAt(i))){
+                validation = false;
+                break;
+            }
         }
         return validation;
     }

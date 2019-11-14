@@ -6,6 +6,7 @@ import com.carpooling.bot.dto.PersonDto;
 import com.carpooling.bot.dto.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,5 +42,8 @@ public class PersonBl {
         return riderDtoList;
     }
 
+    public CpPerson findPersonById(Integer id){
+        return cpPersonRepository.findById(id).get();
+    }
 
 }
