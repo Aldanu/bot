@@ -101,7 +101,7 @@ public class BotBl {
                         cpPersonRepository.save(cpPerson);
                     }
                     if(update.getMessage().getText().equals("Rider")){
-                        response=3;
+                        response=20;
                     }
                     if(update.getMessage().getText().equals("Corregir registro")){
                         response = 4;
@@ -360,12 +360,32 @@ public class BotBl {
                     response = 10;
                     break;
                 case 20:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    response = 20;
+                    //Here is the menu for the carpooler
+                    if(update.getMessage().getText().equals("Buscar Viaje")){
+                        response = 20;
+                    }
+                    if(update.getMessage().getText().equals("Ver Viaje")){
+                        response = 20;
+                    }
+                    if(update.getMessage().getText().equals("Eliminar Viajes")){
+                        response = 20;
+                    }
+                    if(update.getMessage().getText().equals("Volver al Menú Principal")){
+                        response = 3;
+                    }
                     break;
                 case 21:
+
                     break;
                 case 22:
+
                     break;
                 case 23:
+
                     break;
             }
             cpUser.setConversationId(response);

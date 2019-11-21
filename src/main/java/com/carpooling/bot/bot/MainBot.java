@@ -198,6 +198,38 @@ public class MainBot extends TelegramLongPollingBot {
         return keyboardMarkup;
     }
 
+    private ReplyKeyboardMarkup createReplyKeyboardRider() {
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        // Create the keyboard (list of keyboard rows)
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        // Create a keyboard row
+        KeyboardRow row = new KeyboardRow();
+        // Set each button, you can also use KeyboardButton objects if you need something else than text
+
+        row.add("Buscar Viaje");
+        keyboard.add(row);
+        // Create another keyboard row
+        row = new KeyboardRow();
+        // Set each button for the second line
+        row.add("Ver Viaje");
+        // Add the second row to the keyboard
+        keyboard.add(row);
+        row = new KeyboardRow();
+        // Set each button for the second line
+        row.add("Eliminar Viajes");
+        // Add the second row to the keyboard
+        keyboard.add(row);
+        // Set the keyboard to the markup
+        row = new KeyboardRow();
+        // Set each button for the second line
+        row.add("Volver al Menú Principal");
+        // Add the second row to the keyboard
+        keyboard.add(row);
+        keyboardMarkup.setKeyboard(keyboard);
+        // Add it to the message
+        return keyboardMarkup;
+    }
+
     public void response(int conversation, Update update){
         List<String> responses = new ArrayList<>();
         ReplyKeyboardMarkup rkm=null;
@@ -300,7 +332,7 @@ public class MainBot extends TelegramLongPollingBot {
             //****************************************\\
             case 20:
                 responses.add("¿Que desea hacer a continuación?");
-                //rkm= createReplyKeyboardRider();
+                rkm= createReplyKeyboardRider();
                 break;
             case 21:
                 responses.add("De donde va a partir?");
