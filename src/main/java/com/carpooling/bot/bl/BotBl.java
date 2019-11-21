@@ -388,7 +388,17 @@ public class BotBl {
                     response = 20;
                     break;
                 case 24:
-                    response = 25;
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    response = 24;
+                    //Here is the menu for the carpooler
+                    if(update.getMessage().getText().equals("Si")){
+                        response = 25;
+                    }
+                    if(update.getMessage().getText().equals("No")){
+                        response = 26;
+                    }
                     break;
                 case 25:
                     response = 26;

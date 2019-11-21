@@ -118,7 +118,25 @@ public class MainBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }*/
+    private ReplyKeyboardMarkup createReplyKeyboardConfirmation() {
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        // Create the keyboard (list of keyboard rows)
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        // Create a keyboard row
+        KeyboardRow row = new KeyboardRow();
+        // Set each button, you can also use KeyboardButton objects if you need something else than text
+        row.add("Si");
+        // Add the first row to the keyboard
+        keyboard.add(row);
+        row = new KeyboardRow();
+        row.add("No");
+        keyboard.add(row);
 
+        // Set the keyboard to the markup
+        keyboardMarkup.setKeyboard(keyboard);
+        // Add it to the message
+        return keyboardMarkup;
+    }
     //Here the user decides whether it will be a carpooler or a rider and creates a custom keyboard for it
     private ReplyKeyboardMarkup createReplyKeyboard() {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
@@ -348,6 +366,7 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 24:
                 responses.add("Confirmar Viaje?");
+                rkm= createReplyKeyboardConfirmation();
                 break;
             case 25:
                 responses.add("Usted confirmo su viaje");
