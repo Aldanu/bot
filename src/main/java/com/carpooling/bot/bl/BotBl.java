@@ -366,26 +366,35 @@ public class BotBl {
                     response = 20;
                     //Here is the menu for the carpooler
                     if(update.getMessage().getText().equals("Buscar Viaje")){
-                        response = 20;
+                        response = 21;
                     }
                     if(update.getMessage().getText().equals("Ver Viaje")){
-                        response = 20;
+                        response = 22;
                     }
                     if(update.getMessage().getText().equals("Eliminar Viajes")){
-                        response = 20;
+                        response = 23;
                     }
                     if(update.getMessage().getText().equals("Volver al Menú Principal")){
                         response = 3;
                     }
                     break;
                 case 21:
-
+                    response = 24;
                     break;
                 case 22:
-
+                    response = 20;
                     break;
                 case 23:
-
+                    response = 20;
+                    break;
+                case 24:
+                    response = 25;
+                    break;
+                case 25:
+                    response = 26;
+                    break;
+                case 26:
+                    response = 20;
                     break;
             }
             cpUser.setConversationId(response);

@@ -336,10 +336,23 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 21:
                 responses.add("De donde va a partir?");
+                responses.add("Lista de zonas");
+                responses.add("Ingrese el número de la zona de la que partirá");
                 break;
             case 22:
                 responses.add("Esta es su lista de viajes proximos");
                 break;
+            case 23:
+                responses.add("Estos viajes estan disponibles");
+                responses.add("Ingrese el numero del viaje que le interesa");
+                break;
+            case 24:
+                responses.add("Confirmar Viaje?");
+                break;
+            case 25:
+                responses.add("Usted confirmo su viaje");
+            case 26:
+                responses.add("Usted cancelo el viaje");
         }
         for(String messageText: responses) {
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
