@@ -295,7 +295,19 @@ public class MainBot extends TelegramLongPollingBot {
                 }
                 rkm= createOkMenu();
                 break;
-
+            //****************************************\\
+            //Here is the Menu for Rider\\
+            //****************************************\\
+            case 20:
+                responses.add("¿Que desea hacer a continuación?");
+                //rkm= createReplyKeyboardRider();
+                break;
+            case 21:
+                responses.add("De donde va a partir?");
+                break;
+            case 22:
+                responses.add("Esta es su lista de viajes proximos");
+                break;
         }
         for(String messageText: responses) {
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields

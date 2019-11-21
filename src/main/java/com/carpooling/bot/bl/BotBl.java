@@ -6,7 +6,6 @@ import com.carpooling.bot.domain.CpCar;
 import com.carpooling.bot.domain.CpPerson;
 import com.carpooling.bot.domain.CpUser;
 import com.carpooling.bot.dto.Status;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BotBl {
@@ -361,6 +358,14 @@ public class BotBl {
                     break;
                 case 19:
                     response = 10;
+                    break;
+                case 20:
+                    break;
+                case 21:
+                    break;
+                case 22:
+                    break;
+                case 23:
                     break;
             }
             cpUser.setConversationId(response);
