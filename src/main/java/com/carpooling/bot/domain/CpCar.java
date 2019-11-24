@@ -234,4 +234,7 @@ public class CpCar implements Serializable {
                 " Model =" + model + '\n' +
                 ", Capacidad =" + capacity ;
     }
+    public String toStringOption(){
+        return brand+" "+model;
+    }
 }

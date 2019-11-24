@@ -35,9 +35,12 @@ public class MainBot extends TelegramLongPollingBot {
     //This both classes should be changed to an array in order to allow multiuser saving data
     public static CarDto cardto=new CarDto();
     public static PersonDto personDto=new PersonDto();
+    public static CpPerson cpPerson = new CpPerson();
+    public static CpUser cpUser = new CpUser();
     //The array gets the data from the user to manage their conversation
     //The LONG has 4 values, chat id, type of user, conversation, and step of the conversation
     private ArrayList<Long[]> data=new ArrayList<>();
+    List<String> options = new ArrayList<>();
 
     private final static Logger LOGGER = Logger.getLogger(CarpoolingBot.class.getName());
 
@@ -247,7 +250,22 @@ public class MainBot extends TelegramLongPollingBot {
         // Add it to the message
         return keyboardMarkup;
     }
-
+    private ReplyKeyboardMarkup createReplyKeyboardOptions(List<String> options){
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        // Create the keyboard (list of keyboard rows)
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        // Create a keyboard row
+        KeyboardRow row = new KeyboardRow();
+        for(String option: options){
+            row.add(option);
+            keyboard.add(row);
+            // Create another keyboard row
+            row = new KeyboardRow();
+        }
+        keyboardMarkup.setKeyboard(keyboard);
+        // Add it to the message
+        return keyboardMarkup;
+    }
     public void response(int conversation, Update update){
         List<String> responses = new ArrayList<>();
         ReplyKeyboardMarkup rkm=null;
@@ -335,8 +353,8 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 19:
                 responses.add("Listado de tus vehiculos");
-                CpUser cpUser = userBl.findUserByTelegramUserId(update);
-                CpPerson cpPerson = personBl.findPersonById(cpUser.getPersonId().getPersonId());
+                cpUser = userBl.findUserByTelegramUserId(update);
+                cpPerson = personBl.findPersonById(cpUser.getPersonId().getPersonId());
                 List<CpCar> all = carBl.all();
                 for(CpCar car: all){
                     if(car.getPersonId().getPersonId() == cpPerson.getPersonId()){
@@ -370,8 +388,39 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 25:
                 responses.add("Usted confirmo su viaje");
+                break;
             case 26:
                 responses.add("Usted cancelo el viaje");
+                break;
+            case 27:
+                responses.add("Selecciona un automovil");
+                cpUser = userBl.findUserByTelegramUserId(update);
+                cpPerson = personBl.findPersonById(cpUser.getPersonId().getPersonId());
+                List<CpCar> allCars = carBl.all();
+                options = new ArrayList<>();
+                for(CpCar car: allCars){
+                    if(car.getPersonId().getPersonId() == cpPerson.getPersonId()){
+                        options.add(car.toStringOption());
+                    }
+                }
+                rkm = createReplyKeyboardOptions(options);
+                LOGGER.info("Terminando Caso 27");
+                break;
+            case 28:
+                responses.add("Selecciona la zona de partida");
+                options = new ArrayList<>();
+                options.add("Miraflores");
+                options.add("Achumani");
+                options.add("San Miguel");
+                options.add("Obrajes");
+                options.add("Calacoto");
+                options.add("Los Pinos");
+                options.add("Aquisamaña");
+                options.add("Irpavi");
+                options.add("Irpavi II");
+                options.add("Cota Cota");
+                rkm = createReplyKeyboardOptions(options);
+                LOGGER.info("Terminando caso 28");
         }
         for(String messageText: responses) {
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields

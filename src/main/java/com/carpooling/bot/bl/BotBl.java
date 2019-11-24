@@ -214,7 +214,8 @@ public class BotBl {
                         response = 19;
                     }
                     if(update.getMessage().getText().equals("Registrar Viaje")){
-                        response = 10;
+                        LOGGER.info("Registrar Viaje");
+                        response = 27;
                     }
                     if(update.getMessage().getText().equals("Ver viajes")){
                         response = 10;
@@ -405,6 +406,12 @@ public class BotBl {
                     break;
                 case 26:
                     response = 20;
+                    break;
+                case 27:
+                    response = 28;
+                    break;
+                case 28:
+                    response = 10;
                     break;
             }
             cpUser.setConversationId(response);
