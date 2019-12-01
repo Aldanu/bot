@@ -436,7 +436,6 @@ public class MainBot extends TelegramLongPollingBot {
 
     private List<String> zoneOptions(List<String> options){
 
-        LOGGER.info("AAAAAAAAAAAAAA");
         List<CpZone> allZone = zoneBl.all();
 
         for(CpZone zone: allZone){
