@@ -1,9 +1,6 @@
 package com.carpooling.bot.bot;
 
-import com.carpooling.bot.bl.BotBl;
-import com.carpooling.bot.bl.CarBl;
-import com.carpooling.bot.bl.PersonBl;
-import com.carpooling.bot.bl.UserBl;
+import com.carpooling.bot.bl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -17,13 +14,15 @@ public class BotInitializator {
     CarBl carBl;
     UserBl userBl;
     PersonBl personBl;
+    ZoneBl zoneBl;
 
     @Autowired
-    public BotInitializator(BotBl botBl,CarBl carBl,UserBl userBl,PersonBl personBl) {
+    public BotInitializator(BotBl botBl,CarBl carBl,UserBl userBl,PersonBl personBl, ZoneBl zoneBl) {
         this.botBl = botBl;
         this.carBl = carBl;
         this.userBl = userBl;
         this.personBl = personBl;
+        this.zoneBl = zoneBl;
     }
 
     public BotInitializator() {
@@ -34,7 +33,7 @@ public class BotInitializator {
 
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
-            telegramBotsApi.registerBot(new MainBot(botBl,carBl,userBl,personBl));
+            telegramBotsApi.registerBot(new MainBot(botBl,carBl,userBl,personBl, zoneBl));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

@@ -2,13 +2,11 @@ package com.carpooling.bot.bot;
 
 
 import com.carpooling.bot.CarpoolingBot;
-import com.carpooling.bot.bl.BotBl;
-import com.carpooling.bot.bl.CarBl;
-import com.carpooling.bot.bl.PersonBl;
-import com.carpooling.bot.bl.UserBl;
+import com.carpooling.bot.bl.*;
 import com.carpooling.bot.domain.CpCar;
 import com.carpooling.bot.domain.CpPerson;
 import com.carpooling.bot.domain.CpUser;
+import com.carpooling.bot.domain.CpZone;
 import com.carpooling.bot.dto.CarDto;
 import com.carpooling.bot.dto.PersonDto;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -30,11 +28,13 @@ public class MainBot extends TelegramLongPollingBot {
     private CarBl carBl;
     private UserBl userBl;
     private PersonBl personBl;
+    private ZoneBl zoneBl;
     //This both classes should be changed to an array in order to allow multiuser saving data
     public static CarDto cardto=new CarDto();
     public static PersonDto personDto=new PersonDto();
     public static CpPerson cpPerson = new CpPerson();
     public static CpUser cpUser = new CpUser();
+    public static CpZone cpZone = new CpZone();
     //The array gets the data from the user to manage their conversation
     //The LONG has 4 values, chat id, type of user, conversation, and step of the conversation
     private ArrayList<Long[]> data=new ArrayList<>();
@@ -42,11 +42,12 @@ public class MainBot extends TelegramLongPollingBot {
 
     private final static Logger LOGGER = Logger.getLogger(CarpoolingBot.class.getName());
 
-    public MainBot(BotBl botBl, CarBl carBl, UserBl userBl,PersonBl personBl){
+    public MainBot(BotBl botBl, CarBl carBl, UserBl userBl,PersonBl personBl, ZoneBl zoneBl){
         this.botBl = botBl;
         this.carBl = carBl;
         this.userBl = userBl;
         this.personBl = personBl;
+        this.zoneBl = zoneBl;
     }
 
     @Override
@@ -372,7 +373,7 @@ public class MainBot extends TelegramLongPollingBot {
                 responses.add("De donde va a partir?");
                 options = zoneOptions(options);
                 rkm = createReplyKeyboardOptions(options);
-                responses.add("Ingrese el número de la zona de la que partirá");
+                responses.add("Elija la zona de la que partirá");
                 break;
             case 22:
                 responses.add("Esta es su lista de viajes proximos");
@@ -433,17 +434,14 @@ public class MainBot extends TelegramLongPollingBot {
         }
     }
 
-    private static List<String> zoneOptions(List<String> options){
-        options.add("Miraflores");
-        options.add("Achumani");
-        options.add("San Miguel");
-        options.add("Obrajes");
-        options.add("Calacoto");
-        options.add("Los Pinos");
-        options.add("Aquisamaña");
-        options.add("Irpavi");
-        options.add("Irpavi II");
-        options.add("Cota Cota");
+    private List<String> zoneOptions(List<String> options){
+
+        LOGGER.info("AAAAAAAAAAAAAA");
+        List<CpZone> allZone = zoneBl.all();
+
+        for(CpZone zone: allZone){
+            options.add(zone.getName());
+        }
 
         return options;
     }
