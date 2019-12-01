@@ -6,7 +6,6 @@ import com.carpooling.bot.bl.BotBl;
 import com.carpooling.bot.bl.CarBl;
 import com.carpooling.bot.bl.PersonBl;
 import com.carpooling.bot.bl.UserBl;
-import com.carpooling.bot.dao.CpCarRepository;
 import com.carpooling.bot.domain.CpCar;
 import com.carpooling.bot.domain.CpPerson;
 import com.carpooling.bot.domain.CpUser;
@@ -14,7 +13,6 @@ import com.carpooling.bot.dto.CarDto;
 import com.carpooling.bot.dto.PersonDto;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
@@ -372,7 +370,8 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 21:
                 responses.add("De donde va a partir?");
-                responses.add("Lista de zonas");
+                options = zoneOptions(options);
+                rkm = createReplyKeyboardOptions(options);
                 responses.add("Ingrese el número de la zona de la que partirá");
                 break;
             case 22:
@@ -388,9 +387,11 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 25:
                 responses.add("Usted confirmo su viaje");
+                rkm= createOkMenu();
                 break;
             case 26:
                 responses.add("Usted cancelo el viaje");
+                rkm= createOkMenu();
                 break;
             case 27:
                 responses.add("Selecciona un automovil");
@@ -408,17 +409,8 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 28:
                 responses.add("Selecciona la zona de partida");
-                options = new ArrayList<>();
-                options.add("Miraflores");
-                options.add("Achumani");
-                options.add("San Miguel");
-                options.add("Obrajes");
-                options.add("Calacoto");
-                options.add("Los Pinos");
-                options.add("Aquisamaña");
-                options.add("Irpavi");
-                options.add("Irpavi II");
-                options.add("Cota Cota");
+                options = zoneOptions(options);
+
                 rkm = createReplyKeyboardOptions(options);
                 LOGGER.info("Terminando caso 28");
         }
@@ -439,5 +431,20 @@ public class MainBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static List<String> zoneOptions(List<String> options){
+        options.add("Miraflores");
+        options.add("Achumani");
+        options.add("San Miguel");
+        options.add("Obrajes");
+        options.add("Calacoto");
+        options.add("Los Pinos");
+        options.add("Aquisamaña");
+        options.add("Irpavi");
+        options.add("Irpavi II");
+        options.add("Cota Cota");
+
+        return options;
     }
 }
