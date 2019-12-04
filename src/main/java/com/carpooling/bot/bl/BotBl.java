@@ -220,7 +220,7 @@ public class BotBl {
                         response = 27;
                     }
                     if(update.getMessage().getText().equals("Ver viajes")){
-                        response = 10;
+                        response = 29;
                     }
                     if(update.getMessage().getText().equals("Volver al Menú Principal")){
                         response = 3;
@@ -374,7 +374,7 @@ public class BotBl {
                     if(update.getMessage().getText().equals("Ver Viaje")){
                         response = 22;
                     }
-                    if(update.getMessage().getText().equals("Eliminar Viajes")){
+                    if(update.getMessage().getText().equals("Cancelar Viajes")){
                         response = 23;
                     }
                     if(update.getMessage().getText().equals("Volver al Menú Principal")){
@@ -396,10 +396,9 @@ public class BotBl {
                     cpPerson = cpPersonRepository.findById(idUser).get();
                     response = 24;
                     //Here is the menu for the carpooler
-                    if(update.getMessage().getText().equals("Si")){
+                    if(update.getMessage().getText().equals("Si")) {
                         response = 25;
-                    }
-                    if(update.getMessage().getText().equals("No")){
+                    }else if(update.getMessage().getText().equals("No")){
                         response = 26;
                     }else{
                         response=20;
@@ -415,6 +414,9 @@ public class BotBl {
                     response = 28;
                     break;
                 case 28:
+                    response = 10;
+                    break;
+                case 29:
                     response = 10;
                     break;
             }

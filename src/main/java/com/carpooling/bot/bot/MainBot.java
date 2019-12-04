@@ -404,7 +404,9 @@ public class MainBot extends TelegramLongPollingBot {
                 rkm= createOkMenu();
                 break;
             case 23:
-                responses.add("Estos viajes estan disponibles");
+                String zone = update.getMessage().getText();
+                responses.add("Estos viajes estan disponibles para la zona "+zone);
+                options = travelOptions(options, zone);
                 break;
             case 24:
                 //if(update.getCallbackQuery()!=null){
@@ -445,6 +447,10 @@ public class MainBot extends TelegramLongPollingBot {
 
                 rkm = createReplyKeyboardOptions(options);
                 LOGGER.info("Terminando caso 28");
+                break;
+            case 29:
+                responses.add("Estos son sus viajes activos");
+                break;
         }
         for(String messageText: responses) {
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
@@ -466,7 +472,7 @@ public class MainBot extends TelegramLongPollingBot {
     }
 
     private List<String> zoneOptions(List<String> options){
-
+        options.clear();
         List<CpZone> allZone = zoneBl.all();
 
         for(CpZone zone: allZone){
