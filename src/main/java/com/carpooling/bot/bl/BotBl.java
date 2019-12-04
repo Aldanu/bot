@@ -380,13 +380,13 @@ public class BotBl {
                     }
                     break;
                 case 21:
-                    response = 24;
+                    response = 23;
                     break;
                 case 22:
                     response = 20;
                     break;
                 case 23:
-                    response = 20;
+                    response = 24;
                     break;
                 case 24:
                     idUser = cpUser.getPersonId().getPersonId();

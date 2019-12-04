@@ -12,8 +12,10 @@ import com.carpooling.bot.dto.PersonDto;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -265,9 +267,24 @@ public class MainBot extends TelegramLongPollingBot {
         // Add it to the message
         return keyboardMarkup;
     }
+
+    private InlineKeyboardMarkup createInlineKeyboard(){
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
+            rowInline.add(new InlineKeyboardButton().setText("Opcion "+1).setCallbackData("update_msg_text "+2));
+            // Set the keyboard to the markup
+            rowsInline.add(rowInline);
+
+        // Add it to the message
+        markupInline.setKeyboard(rowsInline);
+        return markupInline;
+    }
+
     public void response(int conversation, Update update){
         List<String> responses = new ArrayList<>();
         ReplyKeyboardMarkup rkm=null;
+        InlineKeyboardMarkup ikm=null;
         switch (conversation){
             //****************************************\\
             //Here is the initial registering\\
@@ -377,9 +394,11 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 22:
                 responses.add("Esta es su lista de viajes proximos");
+                rkm= createOkMenu();
                 break;
             case 23:
                 responses.add("Estos viajes estan disponibles");
+                ikm=createInlineKeyboard();
                 responses.add("Ingrese el numero del viaje que le interesa");
                 break;
             case 24:
@@ -424,6 +443,9 @@ public class MainBot extends TelegramLongPollingBot {
             }else{
                 ReplyKeyboardRemove keyboardMarkupRemove = new ReplyKeyboardRemove();
                 message.setReplyMarkup(keyboardMarkupRemove);
+            }
+            if(ikm!=null){
+                message.setReplyMarkup(ikm);
             }
             try {
                 this.execute(message);
