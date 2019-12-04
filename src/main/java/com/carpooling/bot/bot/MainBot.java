@@ -58,6 +58,10 @@ public class MainBot extends TelegramLongPollingBot {
             int conversation = botBl.processUpdate(update);
             //switch moved to the response function
             response(conversation, update);
+        }else if (update.hasCallbackQuery()) {
+            int conversation = botBl.processUpdate(update);
+            response(conversation, update);
+
         }
     }
 
@@ -272,10 +276,9 @@ public class MainBot extends TelegramLongPollingBot {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
-            rowInline.add(new InlineKeyboardButton().setText("Opcion "+1).setCallbackData("update_msg_text "+2));
+            rowInline.add(new InlineKeyboardButton().setText("Opcion " + 1).setCallbackData("update_msg_text " + 2));
             // Set the keyboard to the markup
             rowsInline.add(rowInline);
-
         // Add it to the message
         markupInline.setKeyboard(rowsInline);
         return markupInline;
@@ -399,11 +402,17 @@ public class MainBot extends TelegramLongPollingBot {
             case 23:
                 responses.add("Estos viajes estan disponibles");
                 ikm=createInlineKeyboard();
-                responses.add("Ingrese el numero del viaje que le interesa");
                 break;
             case 24:
-                responses.add("Confirmar Viaje?");
-                rkm= createReplyKeyboardConfirmation();
+                if(update.getCallbackQuery()!=null){
+                    String call_data = update.getCallbackQuery().getData();
+                    responses.add("El viaje escogido fue: "+call_data);
+                    responses.add("Confirmar Viaje?");
+                    rkm= createReplyKeyboardConfirmation();
+                }else{
+                    responses.add("Opcion no valida");
+                    rkm= createOkMenu();
+                }
                 break;
             case 25:
                 responses.add("Usted confirmo su viaje");

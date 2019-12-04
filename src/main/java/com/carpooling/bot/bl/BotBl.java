@@ -44,7 +44,9 @@ public class BotBl {
             Integer idUser;
             CpCar newCar;
             CpPerson cpPerson;
-            CpUser cpUser = cpUserRepository.findByBotUserId(update.getMessage().getFrom().getId().toString());
+            CpUser cpUser;
+            cpUser = cpUserRepository.findByBotUserId(update.getMessage().getFrom().getId().toString());
+
             int last_conversation = cpUser.getConversationId();
             //What happens when chatbot receives a response to a conversation "last conversation"
             switch (last_conversation){
@@ -399,6 +401,8 @@ public class BotBl {
                     }
                     if(update.getMessage().getText().equals("No")){
                         response = 26;
+                    }else{
+                        response=20;
                     }
                     break;
                 case 25:
@@ -423,14 +427,13 @@ public class BotBl {
         boolean response = false;
         User user = update.getMessage().getFrom();
         CpUser cpUser = cpUserRepository.findByBotUserId(user.getId().toString());
-        if(cpUser==null){
+        if (cpUser == null) {
             CpPerson cpPerson = new CpPerson();
             cpPerson.setFirstName(user.getFirstName());
 
-            if(user.getLastName() == null){
+            if (user.getLastName() == null) {
                 cpPerson.setLastName("-");
-            }
-            else{
+            } else {
                 cpPerson.setLastName(user.getLastName());
             }
             cpPerson.setStatus(Status.ACTIVE.getStatus());
