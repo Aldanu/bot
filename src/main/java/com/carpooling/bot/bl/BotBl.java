@@ -388,7 +388,10 @@ public class BotBl {
                     response = 20;
                     break;
                 case 23:
-                    response = 24;
+                    response = 30;
+                    if(isOnlyNumbers(update.getMessage().getText())){
+                        response = 24;
+                    }
                     break;
                 case 24:
                     idUser = cpUser.getPersonId().getPersonId();
@@ -401,7 +404,7 @@ public class BotBl {
                     }else if(update.getMessage().getText().equals("No")){
                         response = 26;
                     }else{
-                        response=20;
+                        response=30;
                     }
                     break;
                 case 25:
@@ -418,6 +421,9 @@ public class BotBl {
                     break;
                 case 29:
                     response = 10;
+                    break;
+                case 30:
+                    response = 20;
                     break;
             }
             cpUser.setConversationId(response);

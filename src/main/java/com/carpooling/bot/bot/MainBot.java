@@ -406,6 +406,7 @@ public class MainBot extends TelegramLongPollingBot {
             case 23:
                 String zone = update.getMessage().getText();
                 responses.add("Estos viajes estan disponibles para la zona "+zone);
+                responses.add("Presione el numero del viaje al que desea registrarse");
                 options = travelOptions(options, zone);
                 break;
             case 24:
@@ -450,6 +451,10 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 29:
                 responses.add("Estos son sus viajes activos");
+                break;
+            case 30:
+                responses.add("Respuesta no valida");
+                rkm=createOkMenu();
                 break;
         }
         for(String messageText: responses) {
