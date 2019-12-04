@@ -15,14 +15,16 @@ public class BotInitializator {
     UserBl userBl;
     PersonBl personBl;
     ZoneBl zoneBl;
+    TravelBl travelBl;
 
     @Autowired
-    public BotInitializator(BotBl botBl,CarBl carBl,UserBl userBl,PersonBl personBl, ZoneBl zoneBl) {
+    public BotInitializator(BotBl botBl,CarBl carBl,UserBl userBl,PersonBl personBl, ZoneBl zoneBl, TravelBl travelBl) {
         this.botBl = botBl;
         this.carBl = carBl;
         this.userBl = userBl;
         this.personBl = personBl;
         this.zoneBl = zoneBl;
+        this.travelBl = travelBl;
     }
 
     public BotInitializator() {
@@ -33,7 +35,7 @@ public class BotInitializator {
 
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
-            telegramBotsApi.registerBot(new MainBot(botBl,carBl,userBl,personBl, zoneBl));
+            telegramBotsApi.registerBot(new MainBot(botBl,carBl,userBl,personBl, zoneBl, travelBl));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

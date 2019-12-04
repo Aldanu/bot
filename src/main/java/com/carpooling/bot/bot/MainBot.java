@@ -3,10 +3,7 @@ package com.carpooling.bot.bot;
 
 import com.carpooling.bot.CarpoolingBot;
 import com.carpooling.bot.bl.*;
-import com.carpooling.bot.domain.CpCar;
-import com.carpooling.bot.domain.CpPerson;
-import com.carpooling.bot.domain.CpUser;
-import com.carpooling.bot.domain.CpZone;
+import com.carpooling.bot.domain.*;
 import com.carpooling.bot.dto.CarDto;
 import com.carpooling.bot.dto.PersonDto;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -31,12 +28,14 @@ public class MainBot extends TelegramLongPollingBot {
     private UserBl userBl;
     private PersonBl personBl;
     private ZoneBl zoneBl;
+    private TravelBl travelBl;
     //This both classes should be changed to an array in order to allow multiuser saving data
     public static CarDto cardto=new CarDto();
     public static PersonDto personDto=new PersonDto();
     public static CpPerson cpPerson = new CpPerson();
     public static CpUser cpUser = new CpUser();
     public static CpZone cpZone = new CpZone();
+    public static CpTravel cpTravel = new CpTravel();
     //The array gets the data from the user to manage their conversation
     //The LONG has 4 values, chat id, type of user, conversation, and step of the conversation
     private ArrayList<Long[]> data=new ArrayList<>();
@@ -44,12 +43,13 @@ public class MainBot extends TelegramLongPollingBot {
 
     private final static Logger LOGGER = Logger.getLogger(CarpoolingBot.class.getName());
 
-    public MainBot(BotBl botBl, CarBl carBl, UserBl userBl,PersonBl personBl, ZoneBl zoneBl){
+    public MainBot(BotBl botBl, CarBl carBl, UserBl userBl,PersonBl personBl, ZoneBl zoneBl, TravelBl travelBl){
         this.botBl = botBl;
         this.carBl = carBl;
         this.userBl = userBl;
         this.personBl = personBl;
         this.zoneBl = zoneBl;
+        this.travelBl = travelBl;
     }
 
     @Override
@@ -272,22 +272,26 @@ public class MainBot extends TelegramLongPollingBot {
         return keyboardMarkup;
     }
 
-    private InlineKeyboardMarkup createInlineKeyboard(){
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
-            rowInline.add(new InlineKeyboardButton().setText("Opcion " + 1).setCallbackData("update_msg_text " + 2));
-            // Set the keyboard to the markup
-            rowsInline.add(rowInline);
+    private ReplyKeyboardMarkup createReplyKeyboardTravels(List<String> options){
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        // Create the keyboard (list of keyboard rows)
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        // Create a keyboard row
+        KeyboardRow row = new KeyboardRow();
+        for(String option: options){
+            row.add(option);
+            keyboard.add(row);
+            // Create another keyboard row
+            row = new KeyboardRow();
+        }
+        keyboardMarkup.setKeyboard(keyboard);
         // Add it to the message
-        markupInline.setKeyboard(rowsInline);
-        return markupInline;
+        return keyboardMarkup;
     }
 
     public void response(int conversation, Update update){
         List<String> responses = new ArrayList<>();
         ReplyKeyboardMarkup rkm=null;
-        InlineKeyboardMarkup ikm=null;
         switch (conversation){
             //****************************************\\
             //Here is the initial registering\\
@@ -401,18 +405,17 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 23:
                 responses.add("Estos viajes estan disponibles");
-                ikm=createInlineKeyboard();
                 break;
             case 24:
-                if(update.getCallbackQuery()!=null){
-                    String call_data = update.getCallbackQuery().getData();
-                    responses.add("El viaje escogido fue: "+call_data);
+                //if(update.getCallbackQuery()!=null){
+                    //String call_data = update.getCallbackQuery().getData();
+                    //responses.add("El viaje escogido fue: "+call_data);
                     responses.add("Confirmar Viaje?");
                     rkm= createReplyKeyboardConfirmation();
-                }else{
+                /*}else{
                     responses.add("Opcion no valida");
                     rkm= createOkMenu();
-                }
+                }*/
                 break;
             case 25:
                 responses.add("Usted confirmo su viaje");
@@ -453,9 +456,6 @@ public class MainBot extends TelegramLongPollingBot {
                 ReplyKeyboardRemove keyboardMarkupRemove = new ReplyKeyboardRemove();
                 message.setReplyMarkup(keyboardMarkupRemove);
             }
-            if(ikm!=null){
-                message.setReplyMarkup(ikm);
-            }
             try {
                 this.execute(message);
 
@@ -471,6 +471,17 @@ public class MainBot extends TelegramLongPollingBot {
 
         for(CpZone zone: allZone){
             options.add(zone.getName());
+        }
+
+        return options;
+    }
+
+    private List<String> travelOptions(List<String> options, String zone){
+
+        List<CpTravel> allTravel = travelBl.all();
+
+        for(CpTravel travel: allTravel){
+            options.add(travel.getDescription());
         }
 
         return options;
