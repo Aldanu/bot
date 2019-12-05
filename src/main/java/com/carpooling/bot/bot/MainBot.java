@@ -407,7 +407,7 @@ public class MainBot extends TelegramLongPollingBot {
                 String zone = update.getMessage().getText();
                 responses.add("Estos viajes estan disponibles para la zona "+zone);
                 responses.add("Presione el numero del viaje al que desea registrarse");
-                options = travelOptions(options, zone);
+                //options = travelOptions(options, zone);
                 break;
             case 24:
                 //if(update.getCallbackQuery()!=null){
