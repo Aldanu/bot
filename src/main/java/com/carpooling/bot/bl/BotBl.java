@@ -379,10 +379,15 @@ public class BotBl {
                     }
                     if(update.getMessage().getText().equals("Volver al Menú Principal")){
                         response = 3;
+                    }else{
+                        response =30;
                     }
                     break;
                 case 21:
-                    response = 23;
+                    response=30;
+                    if(isOnlyNumbers(update.getMessage().getText())){
+                        response = 23;
+                    }
                     break;
                 case 22:
                     response = 20;
@@ -408,9 +413,11 @@ public class BotBl {
                     }
                     break;
                 case 25:
+                    LOGGER.info("Se confirme el viaje y se vuelve al menu");
                     response = 20;
                     break;
                 case 26:
+                    LOGGER.info("Se cancela el viaje y se vuelve al menu");
                     response = 20;
                     break;
                 case 27:
@@ -423,6 +430,7 @@ public class BotBl {
                     response = 10;
                     break;
                 case 30:
+                    LOGGER.info("Se notifica Entrada no valida y se vuelve al menu");
                     response = 20;
                     break;
             }
