@@ -169,5 +169,8 @@ public class CpPlace implements Serializable {
     public String toString() {
         return "com.carpooling.bot.domain.CpPlace[ placeId=" + placeId + " ]";
     }
+    public String toStringOption(){
+        return name;
+    }
     
 }

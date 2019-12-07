@@ -1,13 +1,13 @@
 package com.carpooling.bot.bl;
+import com.carpooling.bot.bot.MainBot;
 import com.carpooling.bot.dao.CpCarRepository;
 import com.carpooling.bot.dao.CpPersonRepository;
 import com.carpooling.bot.dao.CpTravelRepository;
 import com.carpooling.bot.dao.CpUserRepository;
-import com.carpooling.bot.domain.CpCar;
-import com.carpooling.bot.domain.CpPerson;
-import com.carpooling.bot.domain.CpTravel;
-import com.carpooling.bot.domain.CpUser;
+import com.carpooling.bot.domain.*;
 import com.carpooling.bot.dto.Status;
+import com.carpooling.bot.bot.responseConversation;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,11 @@ public class BotBl {
     private UserBl userBl;
     private CarBl carBl;
     private PersonBl personBl;
+    private ZoneBl zoneBl;
+    private PlaceBl placeBl;
     @Autowired
     public BotBl(CpUserRepository cpUserRepository, CpPersonRepository cpPersonRepository, CpCarRepository cpCarRepository,
-                 CpTravelRepository cpTravelRepository,UserBl userBl, CarBl carBl, PersonBl personBl) {
+                 CpTravelRepository cpTravelRepository,UserBl userBl, CarBl carBl, PersonBl personBl,ZoneBl zoneBl,PlaceBl placeBl) {
         this.cpUserRepository = cpUserRepository;
         this.cpPersonRepository = cpPersonRepository;
         this.cpCarRepository= cpCarRepository;
@@ -40,12 +42,15 @@ public class BotBl {
         this.userBl = userBl;
         this.carBl = carBl;
         this.personBl = personBl;
+        this.zoneBl = zoneBl;
+        this.placeBl = placeBl;
     }
 
     //This method process and update when a user is send a message to the chatbot
-    public int processUpdate(Update update){
+    public responseConversation processUpdate(Update update){
         LOGGER.info("Receiving an update from user {}",update);
         int response = 0;
+        List<String> options = new ArrayList<>();
         if(isNewUser(update)){
             LOGGER.info("First time using app for: {} ",update.getMessage().getFrom() );
             response = 1;
@@ -469,9 +474,15 @@ public class BotBl {
                     }
                     break;
                 case 28:
-                    response = 10;
+                    CpZone selectedZone = zoneBl.findByName(update.getMessage().getText());
+                    List<CpPlace> placesZone = placeBl.findByZone(selectedZone);
+                    for(CpPlace place:placesZone){
+                        options.add(place.toStringOption());
+                    }
+                    response = 31;
                     break;
                 case 29:
+
                     response = 10;
                     break;
                 case 30:
@@ -482,7 +493,8 @@ public class BotBl {
             cpUser.setConversationId(response);
             cpUserRepository.save(cpUser);
         }
-        return response;
+        responseConversation result = new responseConversation(response,options);
+        return result;
     }
     private boolean isNewUser(Update update){
         boolean response = false;

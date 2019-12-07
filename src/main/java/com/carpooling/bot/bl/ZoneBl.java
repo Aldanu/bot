@@ -32,4 +32,14 @@ public class ZoneBl {
         }
         return zoneList;
     }
+    public CpZone findByName(String name){
+        CpZone result = new CpZone();
+        List<CpZone> zones = all();
+        for(CpZone zone: zones){
+            if(zone.getName().equals(name)){
+                result = zone;
+            }
+        }
+        return result;
+    }
 }

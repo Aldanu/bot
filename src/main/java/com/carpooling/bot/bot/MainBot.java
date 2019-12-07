@@ -52,16 +52,20 @@ public class MainBot extends TelegramLongPollingBot {
         this.travelBl = travelBl;
     }
 
+    public void setOptions(List<String> options) {
+        this.options = options;
+    }
+
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            int conversation = botBl.processUpdate(update);
+            responseConversation action = botBl.processUpdate(update);
             //switch moved to the response function
-            response(conversation, update);
+            response(action, update);
         }else if (update.hasCallbackQuery()) {
-            int conversation = botBl.processUpdate(update);
-            response(conversation, update);
-
+            responseConversation action = botBl.processUpdate(update);
+            //switch moved to the response function
+            response(action, update);
         }
     }
 
@@ -289,7 +293,8 @@ public class MainBot extends TelegramLongPollingBot {
         return keyboardMarkup;
     }
 
-    public void response(int conversation, Update update){
+    public void response(responseConversation action, Update update){
+        int conversation = action.getConversation();
         List<String> responses = new ArrayList<>();
         ReplyKeyboardMarkup rkm=null;
         switch (conversation){
@@ -445,7 +450,6 @@ public class MainBot extends TelegramLongPollingBot {
             case 28:
                 responses.add("Selecciona la zona de partida");
                 options = zoneOptions(options);
-
                 rkm = createReplyKeyboardOptions(options);
                 LOGGER.info("Terminando caso 28");
                 break;
@@ -455,6 +459,10 @@ public class MainBot extends TelegramLongPollingBot {
             case 30:
                 responses.add("Respuesta no valida");
                 rkm=createOkMenu();
+                break;
+            case 31:
+                responses.add("Seleccione un lugar de partida");
+                rkm = createReplyKeyboardOptions(action.getOptions());
                 break;
         }
         for(String messageText: responses) {
