@@ -421,6 +421,7 @@ public class BotBl {
                     response = 20;
                     break;
                 case 27:
+
                     response = 28;
                     break;
                 case 28:

@@ -59,9 +59,9 @@ public class CpTravel implements Serializable {
     private Integer travelId;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 100)
     @Column(name = "departure_time")
-    @Temporal(TemporalType.TIME)
-    private Date departureTime;
+    private String departureTime;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
@@ -112,7 +112,7 @@ public class CpTravel implements Serializable {
         this.travelId = travelId;
     }
 
-    public CpTravel(Integer travelId, Date departureTime, BigDecimal cost, int numberPassengers, int petFriendly, int status, String txUser, String txHost, Date txDate) {
+    public CpTravel(Integer travelId, String departureTime, BigDecimal cost, int numberPassengers, int petFriendly, int status, String txUser, String txHost, Date txDate) {
         this.travelId = travelId;
         this.departureTime = departureTime;
         this.cost = cost;
@@ -132,11 +132,11 @@ public class CpTravel implements Serializable {
         this.travelId = travelId;
     }
 
-    public Date getDepartureTime() {
+    public String getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(Date departureTime) {
+    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 

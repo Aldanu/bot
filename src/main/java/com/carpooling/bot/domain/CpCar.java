@@ -229,12 +229,7 @@ public class CpCar implements Serializable {
 
     @Override
     public String toString() {
-        return "Placa = " + enrollmentNumber + '\n' +
-                "Marca =" + brand + '\n' +
-                " Model =" + model + '\n' +
-                ", Capacidad =" + capacity ;
+        return "com.carpooling.bot.domain.CpCar[ carId=" + carId + " ]";
     }
-    public String toStringOption(){
-        return brand+" "+model;
-    }
+    
 }
