@@ -32,9 +32,11 @@ public class BotBl {
     private PersonBl personBl;
     private ZoneBl zoneBl;
     private PlaceBl placeBl;
+    private TravelBl travelBl;
     @Autowired
     public BotBl(CpUserRepository cpUserRepository, CpPersonRepository cpPersonRepository, CpCarRepository cpCarRepository,
-                 CpTravelRepository cpTravelRepository,UserBl userBl, CarBl carBl, PersonBl personBl,ZoneBl zoneBl,PlaceBl placeBl) {
+                 CpTravelRepository cpTravelRepository,UserBl userBl, CarBl carBl, PersonBl personBl,ZoneBl zoneBl,PlaceBl placeBl
+                ,TravelBl travelBl) {
         this.cpUserRepository = cpUserRepository;
         this.cpPersonRepository = cpPersonRepository;
         this.cpCarRepository= cpCarRepository;
@@ -44,6 +46,7 @@ public class BotBl {
         this.personBl = personBl;
         this.zoneBl = zoneBl;
         this.placeBl = placeBl;
+        this.travelBl = travelBl;
     }
 
     //This method process and update when a user is send a message to the chatbot
@@ -489,6 +492,31 @@ public class BotBl {
                     LOGGER.info("Se notifica Entrada no valida y se vuelve al menu");
                     response = 20;
                     break;
+                case 31:
+                    response = 32;
+                    CpPlace startPlace = placeBl.getPlaceByName(update.getMessage().getText());
+                    idUser = cpUser.getPersonId().getPersonId();
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    List<CpTravel> travels = cpTravelRepository.findAll();
+                    CpTravel currenTravel = travelBl.getLastTravel(travels,cpPerson);
+                    for(CpPlace place:placeBl.all()){
+                        options.add(place.toStringOption());
+                    }
+                    options.add("Terminar");
+                    break;
+                case 32:
+                    options.clear();
+                    if(update.getMessage().getText().equals("Terminar")){
+                        response = 10;
+                    }
+                    else{
+                        for(CpPlace place:placeBl.all()){
+                            options.add(place.toStringOption());
+                        }
+                        options.add("Terminar");
+                        response = 32;
+                    }
+                    LOGGER.warn("ALBAA 32");
             }
             cpUser.setConversationId(response);
             cpUserRepository.save(cpUser);

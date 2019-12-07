@@ -463,6 +463,12 @@ public class MainBot extends TelegramLongPollingBot {
             case 31:
                 responses.add("Seleccione un lugar de partida");
                 rkm = createReplyKeyboardOptions(action.getOptions());
+                LOGGER.info("Creando Lugares por cierta zona");
+                break;
+            case 32:
+                responses.add("Ingrese punto de parada ");
+                rkm = createReplyKeyboardOptions(action.getOptions());
+                LOGGER.info("Mostrando todos los lugares");
                 break;
         }
         for(String messageText: responses) {
@@ -487,7 +493,6 @@ public class MainBot extends TelegramLongPollingBot {
     private List<String> zoneOptions(List<String> options){
         options.clear();
         List<CpZone> allZone = zoneBl.all();
-
         for(CpZone zone: allZone){
             options.add(zone.getName());
         }
@@ -496,13 +501,10 @@ public class MainBot extends TelegramLongPollingBot {
     }
 
     private List<String> travelOptions(List<String> options, String zone){
-
         List<CpTravel> allTravel = travelBl.all();
-
         for(CpTravel travel: allTravel){
             options.add(travel.getDescription());
         }
-
         return options;
     }
 }

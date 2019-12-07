@@ -41,4 +41,13 @@ public class PlaceBl {
         }
         return result;
     }
+    public CpPlace getPlaceByName(String name){
+        CpPlace result = new CpPlace();
+        for(CpPlace place:all()){
+            if(place.getName().equals(name)){
+                result = place;
+            }
+        }
+        return result;
+    }
 }
