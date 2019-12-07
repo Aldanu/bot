@@ -231,5 +231,7 @@ public class CpCar implements Serializable {
     public String toString() {
         return "com.carpooling.bot.domain.CpCar[ carId=" + carId + " ]";
     }
-    
+    public String toStringOption(){
+        return brand+" "+model;
+    }
 }

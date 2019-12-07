@@ -1,9 +1,11 @@
 package com.carpooling.bot.bl;
 import com.carpooling.bot.dao.CpCarRepository;
 import com.carpooling.bot.dao.CpPersonRepository;
+import com.carpooling.bot.dao.CpTravelRepository;
 import com.carpooling.bot.dao.CpUserRepository;
 import com.carpooling.bot.domain.CpCar;
 import com.carpooling.bot.domain.CpPerson;
+import com.carpooling.bot.domain.CpTravel;
 import com.carpooling.bot.domain.CpUser;
 import com.carpooling.bot.dto.Status;
 import org.slf4j.Logger;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,11 +26,20 @@ public class BotBl {
     private CpUserRepository cpUserRepository;
     private CpPersonRepository cpPersonRepository;
     private CpCarRepository cpCarRepository;
+    private CpTravelRepository cpTravelRepository;
+    private UserBl userBl;
+    private CarBl carBl;
+    private PersonBl personBl;
     @Autowired
-    public BotBl(CpUserRepository cpUserRepository, CpPersonRepository cpPersonRepository, CpCarRepository cpCarRepository) {
+    public BotBl(CpUserRepository cpUserRepository, CpPersonRepository cpPersonRepository, CpCarRepository cpCarRepository,
+                 CpTravelRepository cpTravelRepository,UserBl userBl, CarBl carBl, PersonBl personBl) {
         this.cpUserRepository = cpUserRepository;
         this.cpPersonRepository = cpPersonRepository;
         this.cpCarRepository= cpCarRepository;
+        this.cpTravelRepository = cpTravelRepository;
+        this.userBl = userBl;
+        this.carBl = carBl;
+        this.personBl = personBl;
     }
 
     //This method process and update when a user is send a message to the chatbot
@@ -421,8 +434,39 @@ public class BotBl {
                     response = 20;
                     break;
                 case 27:
-
-                    response = 28;
+                    LOGGER.info("Registering an empty travel");
+                    //Set carName without spaces to search this in DB
+                    String carName = update.getMessage().getText();
+                    carName = carName.replace(" ","");
+                    cpUser = userBl.findUserByTelegramUserId(update);
+                    cpPerson = personBl.findPersonById(cpUser.getPersonId().getPersonId());
+                    List<CpCar> allCarsList = carBl.all();
+                    CpCar carForTravel = null;
+                    for(CpCar car: allCarsList){
+                        if(car.getPersonId().getPersonId() == cpPerson.getPersonId()){
+                            String probCar = car.toStringOption().replace(" ","");
+                            if(probCar.equals(carName)){
+                                carForTravel = carBl.findById(car.getCarId());
+                            }
+                        }
+                    }
+                    if(carForTravel == null){
+                        response = 27;
+                    }
+                    else{
+                        CpTravel cpTravel = new CpTravel();
+                        cpTravel.setCarId(carForTravel);
+                        cpTravel.setDepartureTime("-");
+                        cpTravel.setCost(new BigDecimal("0.00"));
+                        cpTravel.setNumberPassengers(0);
+                        cpTravel.setPetFriendly(0);
+                        cpTravel.setStatus(1);
+                        cpTravel.setTxUser("admin");
+                        cpTravel.setTxHost("localhost");
+                        cpTravel.setTxDate(new Date());
+                        cpTravelRepository.save(cpTravel);
+                        response = 28;
+                    }
                     break;
                 case 28:
                     response = 10;

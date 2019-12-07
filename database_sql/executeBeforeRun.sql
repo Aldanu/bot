@@ -23,3 +23,5 @@ INSERT INTO cp_place(zone_id,name,latitude,longitude,status) VALUES (7,'Mercado 
 INSERT INTO cp_place(zone_id,name,latitude,longitude,status) VALUES (7,'Santuario de Schoenstatt',-16.525257, -68.071498,1);
 INSERT INTO cp_place(zone_id,name,latitude,longitude,status) VALUES (8,'Laguna de Cota Cota',-16.541590, -68.064353,1);
 INSERT INTO cp_place(zone_id,name,latitude,longitude,status) VALUES (8,'UMSA Cota Cota',-16.539265, -68.063580,1);
+
+ALTER TABLE cp_travel ALTER COLUMN departure_time SET DATA TYPE varchar(100);

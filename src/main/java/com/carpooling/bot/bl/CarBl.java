@@ -35,6 +35,11 @@ public class CarBl {
         }
         return carList;
     }
+    public CpCar findById(Integer id){
+        CpCar car = null;
+        car = cpCarRepository.findById(id).get();
+        return car;
+    }
     public int carRegister(String message_text, long chat_id, int step, CarDto car, CarpoolingBot carpoolingBot) {
         String text;
         switch (step) {
