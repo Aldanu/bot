@@ -1,9 +1,6 @@
 package com.carpooling.bot.bl;
 import com.carpooling.bot.bot.MainBot;
-import com.carpooling.bot.dao.CpCarRepository;
-import com.carpooling.bot.dao.CpPersonRepository;
-import com.carpooling.bot.dao.CpTravelRepository;
-import com.carpooling.bot.dao.CpUserRepository;
+import com.carpooling.bot.dao.*;
 import com.carpooling.bot.domain.*;
 import com.carpooling.bot.dto.Status;
 import com.carpooling.bot.bot.responseConversation;
@@ -12,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
@@ -21,32 +19,37 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class BotBl {
     private static final Logger LOGGER = LoggerFactory.getLogger(BotBl.class);
     private CpUserRepository cpUserRepository;
     private CpPersonRepository cpPersonRepository;
     private CpCarRepository cpCarRepository;
     private CpTravelRepository cpTravelRepository;
+    private CpTravelPlaceRepository cpTravelPlaceRepository;
     private UserBl userBl;
     private CarBl carBl;
     private PersonBl personBl;
     private ZoneBl zoneBl;
     private PlaceBl placeBl;
     private TravelBl travelBl;
+    private TravelPlaceBl travelPlaceBl;
     @Autowired
     public BotBl(CpUserRepository cpUserRepository, CpPersonRepository cpPersonRepository, CpCarRepository cpCarRepository,
-                 CpTravelRepository cpTravelRepository,UserBl userBl, CarBl carBl, PersonBl personBl,ZoneBl zoneBl,PlaceBl placeBl
-                ,TravelBl travelBl) {
+                 CpTravelRepository cpTravelRepository, CpTravelPlaceRepository cpTravelPlaceRepository,UserBl userBl, CarBl carBl, PersonBl personBl,ZoneBl zoneBl,PlaceBl placeBl
+                ,TravelBl travelBl,TravelPlaceBl travelPlaceBl) {
         this.cpUserRepository = cpUserRepository;
         this.cpPersonRepository = cpPersonRepository;
         this.cpCarRepository= cpCarRepository;
         this.cpTravelRepository = cpTravelRepository;
+        this.cpTravelPlaceRepository = cpTravelPlaceRepository;
         this.userBl = userBl;
         this.carBl = carBl;
         this.personBl = personBl;
         this.zoneBl = zoneBl;
         this.placeBl = placeBl;
         this.travelBl = travelBl;
+        this.travelPlaceBl = travelPlaceBl;
     }
 
     //This method process and update when a user is send a message to the chatbot
@@ -493,7 +496,6 @@ public class BotBl {
                     response = 20;
                     break;
                 case 31:
-                    response = 32;
                     CpPlace startPlace = placeBl.getPlaceByName(update.getMessage().getText());
                     idUser = cpUser.getPersonId().getPersonId();
                     cpPerson = cpPersonRepository.findById(idUser).get();
@@ -502,10 +504,32 @@ public class BotBl {
                     for(CpPlace place:placeBl.all()){
                         options.add(place.toStringOption());
                     }
-                    options.add("Terminar");
+                    if(startPlace!=null && currenTravel!=null) {
+                        CpTravelPlace cpTravelPlace = new CpTravelPlace();
+                        cpTravelPlace.setPlaceId(startPlace);
+                        cpTravelPlace.setTravelId(currenTravel);
+                        cpTravelPlace.setposition(1);
+                        cpTravelPlace.setStatus(1);
+                        cpTravelPlace.setTxHost("localhost");
+                        cpTravelPlace.setTxUser("admin");
+                        cpTravelPlace.setTxDate(new Date());
+                        cpTravelPlaceRepository.save(cpTravelPlace);
+                        options.add("Terminar");
+                        response=32;
+                    }
+                    //LIST ALL PLACES WITHOUT ORDER
+                    else{
+                        response = 31;
+                    }
                     break;
                 case 32:
                     options.clear();
+                    CpPlace placeSelected = placeBl.getPlaceByName(update.getMessage().getText());
+                    idUser = cpUser.getPersonId().getPersonId();
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    List<CpTravel> travelList = cpTravelRepository.findAll();
+                    CpTravel lastTravel = travelBl.getLastTravel(travelList,cpPerson);
+                    int lastPosition = travelPlaceBl.getLastPosition(lastTravel);
                     if(update.getMessage().getText().equals("Terminar")){
                         response = 10;
                     }
@@ -515,8 +539,17 @@ public class BotBl {
                         }
                         options.add("Terminar");
                         response = 32;
+                        //STORE IN DB a new stop
+                        CpTravelPlace travelPlace = new CpTravelPlace();
+                        travelPlace.setposition(lastPosition);
+                        travelPlace.setTxUser("admin");
+                        travelPlace.setTxHost("localhost");
+                        travelPlace.setTxDate(new Date());
+                        travelPlace.setTravelId(lastTravel);
+                        travelPlace.setPlaceId(placeSelected);
+                        travelPlace.setStatus(1);
+                        cpTravelPlaceRepository.save(travelPlace);
                     }
-                    LOGGER.warn("ALBAA 32");
             }
             cpUser.setConversationId(response);
             cpUserRepository.save(cpUser);

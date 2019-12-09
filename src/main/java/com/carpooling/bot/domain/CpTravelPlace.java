@@ -33,13 +33,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "cp_travel_place")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CpTravelPlace.findAll", query = "SELECT c FROM CpTravelPlace c"),
-    @NamedQuery(name = "CpTravelPlace.findByTravelPlaceId", query = "SELECT c FROM CpTravelPlace c WHERE c.travelPlaceId = :travelPlaceId"),
-    @NamedQuery(name = "CpTravelPlace.findByOrder", query = "SELECT c FROM CpTravelPlace c WHERE c.order = :order"),
-    @NamedQuery(name = "CpTravelPlace.findByStatus", query = "SELECT c FROM CpTravelPlace c WHERE c.status = :status"),
-    @NamedQuery(name = "CpTravelPlace.findByTxUser", query = "SELECT c FROM CpTravelPlace c WHERE c.txUser = :txUser"),
-    @NamedQuery(name = "CpTravelPlace.findByTxHost", query = "SELECT c FROM CpTravelPlace c WHERE c.txHost = :txHost"),
-    @NamedQuery(name = "CpTravelPlace.findByTxDate", query = "SELECT c FROM CpTravelPlace c WHERE c.txDate = :txDate")})
+        @NamedQuery(name = "CpTravelPlace.findAll", query = "SELECT c FROM CpTravelPlace c"),
+        @NamedQuery(name = "CpTravelPlace.findByTravelPlaceId", query = "SELECT c FROM CpTravelPlace c WHERE c.travelPlaceId = :travelPlaceId"),
+        @NamedQuery(name = "CpTravelPlace.findByposition", query = "SELECT c FROM CpTravelPlace c WHERE c.position = :position"),
+        @NamedQuery(name = "CpTravelPlace.findByStatus", query = "SELECT c FROM CpTravelPlace c WHERE c.status = :status"),
+        @NamedQuery(name = "CpTravelPlace.findByTxUser", query = "SELECT c FROM CpTravelPlace c WHERE c.txUser = :txUser"),
+        @NamedQuery(name = "CpTravelPlace.findByTxHost", query = "SELECT c FROM CpTravelPlace c WHERE c.txHost = :txHost"),
+        @NamedQuery(name = "CpTravelPlace.findByTxDate", query = "SELECT c FROM CpTravelPlace c WHERE c.txDate = :txDate")})
 public class CpTravelPlace implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,8 +50,8 @@ public class CpTravelPlace implements Serializable {
     private Integer travelPlaceId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "order")
-    private int order;
+    @Column(name = "position")
+    private int position;
     @Basic(optional = false)
     @NotNull
     @Column(name = "status")
@@ -85,9 +85,9 @@ public class CpTravelPlace implements Serializable {
         this.travelPlaceId = travelPlaceId;
     }
 
-    public CpTravelPlace(Integer travelPlaceId, int order, int status, String txUser, String txHost, Date txDate) {
+    public CpTravelPlace(Integer travelPlaceId, int position, int status, String txUser, String txHost, Date txDate) {
         this.travelPlaceId = travelPlaceId;
-        this.order = order;
+        this.position = position;
         this.status = status;
         this.txUser = txUser;
         this.txHost = txHost;
@@ -102,12 +102,12 @@ public class CpTravelPlace implements Serializable {
         this.travelPlaceId = travelPlaceId;
     }
 
-    public int getOrder() {
-        return order;
+    public int getposition() {
+        return position;
     }
 
-    public void setOrder(int order) {
-        this.order = order;
+    public void setposition(int position) {
+        this.position = position;
     }
 
     public int getStatus() {
@@ -182,5 +182,5 @@ public class CpTravelPlace implements Serializable {
     public String toString() {
         return "com.carpooling.bot.domain.CpTravelPlace[ travelPlaceId=" + travelPlaceId + " ]";
     }
-    
+
 }

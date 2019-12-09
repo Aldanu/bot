@@ -25,3 +25,4 @@ INSERT INTO cp_place(zone_id,name,latitude,longitude,status) VALUES (8,'Laguna d
 INSERT INTO cp_place(zone_id,name,latitude,longitude,status) VALUES (8,'UMSA Cota Cota',-16.539265, -68.063580,1);
 
 ALTER TABLE cp_travel ALTER COLUMN departure_time SET DATA TYPE varchar(100);
+ALTER TABLE cp_travel_place RENAME COLUMN "order" TO position;
