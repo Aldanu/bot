@@ -70,6 +70,7 @@ public class BotBl {
             CpCar newCar;
             CpPerson cpPerson;
             CpUser cpUser;
+            CpTravel currentTravel = new CpTravel();
             cpUser = cpUserRepository.findByBotUserId(update.getMessage().getFrom().getId().toString());
 
             int last_conversation = cpUser.getConversationId();
@@ -555,13 +556,78 @@ public class BotBl {
                 case 33:
                     if(validator.isValidDate(update.getMessage().getText())){
                         LOGGER.info("Fecha Valida");
-                        response = 10;
+                        idUser = cpUser.getPersonId().getPersonId();
+                        cpPerson = cpPersonRepository.findById(idUser).get();
+                        currentTravel = travelBl.getLastTravel(cpTravelRepository.findAll(),cpPerson);
+                        currentTravel.setDepartureTime(update.getMessage().getText());
+                        cpTravelRepository.save(currentTravel);
+                        response = 34;
                     }
                     else{
                         LOGGER.info("Fecha Invalida");
                         response = 33;
                     }
                     break;
+                case 34:
+                    if(validator.isCorrectCurrency(update.getMessage().getText())){
+                        LOGGER.info("Correct currency");
+                        idUser = cpUser.getPersonId().getPersonId();
+                        cpPerson = cpPersonRepository.findById(idUser).get();
+                        currentTravel = travelBl.getLastTravel(cpTravelRepository.findAll(),cpPerson);
+                        currentTravel.setCost(new BigDecimal(update.getMessage().getText()));
+                        cpTravelRepository.save(currentTravel);
+                        response = 35;
+                    }
+                    else{
+                        LOGGER.info("Incorrect currency");
+                        response = 34;
+                    }
+                    break;
+                case 35:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    currentTravel = travelBl.getLastTravel(cpTravelRepository.findAll(),cpPerson);
+                    CpCar carTravel = currentTravel.getCarId();
+                    if(isOnlyNumbers(update.getMessage().getText())){
+                        if(carTravel.getCapacity()>=Integer.parseInt(update.getMessage().getText())){
+                            currentTravel.setNumberPassengers(Integer.parseInt(update.getMessage().getText()));
+                            cpTravelRepository.save(currentTravel);
+                            LOGGER.info("Capacidad aceptada");
+                            options.clear();
+                            options.add("Si");
+                            options.add("No");
+                            response = 36;
+                        }
+                        else{
+                            LOGGER.info("Capacidad Excedida");
+                            response = 35;
+                        }
+                    }
+                    else{
+                        LOGGER.info("Not Only numbers in Capacity");
+                        response = 35;
+                    }
+                    break;
+                case 36:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    currentTravel = travelBl.getLastTravel(cpTravelRepository.findAll(),cpPerson);
+                    String message = update.getMessage().getText();
+                    if(message.equals("Si")){
+                        currentTravel.setPetFriendly(1);
+                        cpTravelRepository.save(currentTravel);
+                        response=10;
+                    }
+                    else{
+                        if(message.equals("No")){
+                            currentTravel.setPetFriendly(0);
+                            cpTravelRepository.save(currentTravel);
+                            response=10;
+                        }
+                        else{
+                            response = 36;
+                        }
+                    }
             }
             cpUser.setConversationId(response);
             cpUserRepository.save(cpUser);

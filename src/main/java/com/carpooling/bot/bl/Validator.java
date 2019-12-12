@@ -123,4 +123,43 @@ public class Validator {
         LOGGER.info(y+" no es bisiseto");
         return false;
     }
+    public boolean isCorrectCurrency(String currency){
+        boolean response = true;
+        currency = currency.trim();
+        int countDig = 0;
+        int countPoint = 0;
+        int posPoint = 0;
+        for(int i=0;i<currency.length();i++){
+            if(Character.isDigit(currency.charAt(i))) countDig++;
+            if(currency.charAt(i) == '.'){
+                countPoint++;
+                posPoint = i;
+            }
+        }
+        if(countDig+countPoint != currency.length() && countPoint == 1){
+            response = false;
+            LOGGER.info("Not Correct format of Currency");
+        }
+        if(countPoint!=1 || posPoint!=currency.length()-3){
+            response = false;
+            LOGGER.info("Not Correct position of decimal point");
+        }
+        else{
+            if(!Character.isDigit(currency.charAt(posPoint+1)) || currency.charAt(posPoint+2)!='0'){
+                response = false;
+                LOGGER.info("Not correct content after the decimal point");
+            }
+        }
+        return response;
+    }
+    public   boolean isOnlyNumbers(String text){
+        boolean validation = true;
+        for(int i=0;i<text.length();i++){
+            if(!Character.isDigit(text.charAt(i))){
+                validation = false;
+                break;
+            }
+        }
+        return validation;
+    }
 }

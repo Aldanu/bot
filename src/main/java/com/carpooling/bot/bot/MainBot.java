@@ -473,6 +473,18 @@ public class MainBot extends TelegramLongPollingBot {
             case 33:
                 responses.add("Ingrese Fecha y Hora de partida en el formato DD/MM/YYYY HH:MM");
                 break;
+            case 34:
+                responses.add("Ingrese el costo del viaje si sera gratis ingrese 0.00");
+                responses.add("Procure siempre colocar dos numeros despues del punto decimal");
+                responses.add("Por ejemplo si su costo es 1 boliviano ingrese 1.00");
+                break;
+            case 35:
+                responses.add("Ingrese el numero de pasajeros que desea llevar");
+                break;
+            case 36:
+                responses.add("Usted acepta mascotas?");
+                rkm = createReplyKeyboardOptions(action.getOptions());
+                break;
         }
         for(String messageText: responses) {
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
