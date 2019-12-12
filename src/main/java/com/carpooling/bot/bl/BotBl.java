@@ -34,6 +34,7 @@ public class BotBl {
     private PlaceBl placeBl;
     private TravelBl travelBl;
     private TravelPlaceBl travelPlaceBl;
+    private  Validator validator = new Validator();
     @Autowired
     public BotBl(CpUserRepository cpUserRepository, CpPersonRepository cpPersonRepository, CpCarRepository cpCarRepository,
                  CpTravelRepository cpTravelRepository, CpTravelPlaceRepository cpTravelPlaceRepository,UserBl userBl, CarBl carBl, PersonBl personBl,ZoneBl zoneBl,PlaceBl placeBl
@@ -531,7 +532,7 @@ public class BotBl {
                     CpTravel lastTravel = travelBl.getLastTravel(travelList,cpPerson);
                     int lastPosition = travelPlaceBl.getLastPosition(lastTravel);
                     if(update.getMessage().getText().equals("Terminar")){
-                        response = 10;
+                        response = 33;
                     }
                     else{
                         for(CpPlace place:placeBl.all()){
@@ -550,6 +551,17 @@ public class BotBl {
                         travelPlace.setStatus(1);
                         cpTravelPlaceRepository.save(travelPlace);
                     }
+                    break;
+                case 33:
+                    if(validator.isValidDate(update.getMessage().getText())){
+                        LOGGER.info("Fecha Valida");
+                        response = 10;
+                    }
+                    else{
+                        LOGGER.info("Fecha Invalida");
+                        response = 33;
+                    }
+                    break;
             }
             cpUser.setConversationId(response);
             cpUserRepository.save(cpUser);

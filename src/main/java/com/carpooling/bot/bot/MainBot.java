@@ -470,6 +470,9 @@ public class MainBot extends TelegramLongPollingBot {
                 rkm = createReplyKeyboardOptions(action.getOptions());
                 LOGGER.info("Mostrando todos los lugares");
                 break;
+            case 33:
+                responses.add("Ingrese Fecha y Hora de partida en el formato DD/MM/YYYY HH:MM");
+                break;
         }
         for(String messageText: responses) {
             SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
