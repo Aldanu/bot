@@ -50,4 +50,17 @@ public class TravelBl {
         }
         return  result;
     }
+
+    public List<CpTravel> getTravelByZone(String zone){
+        List<CpTravel> travelList = new ArrayList<>();
+        /*List<CpTravel> all = cpTravelRepository.findByZone(zone);
+        for(CpTravel travel: all){
+
+            if(travel.getStatus() == 0){
+
+                travelList.add(travel);
+            }
+        }*/
+        return  travelList;
+    }
 }

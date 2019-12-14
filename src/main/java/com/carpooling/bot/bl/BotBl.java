@@ -4,7 +4,6 @@ import com.carpooling.bot.dao.*;
 import com.carpooling.bot.domain.*;
 import com.carpooling.bot.dto.Status;
 import com.carpooling.bot.bot.responseConversation;
-import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

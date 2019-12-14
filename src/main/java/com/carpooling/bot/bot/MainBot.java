@@ -516,7 +516,7 @@ public class MainBot extends TelegramLongPollingBot {
     }
 
     private List<String> travelOptions(List<String> options, String zone){
-        List<CpTravel> allTravel = travelBl.all();
+        List<CpTravel> allTravel = travelBl.getTravelByZone(zone);
         for(CpTravel travel: allTravel){
             options.add(travel.getDescription());
         }
