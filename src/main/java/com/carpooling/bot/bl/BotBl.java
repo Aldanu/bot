@@ -26,12 +26,14 @@ public class BotBl {
     private CpCarRepository cpCarRepository;
     private CpTravelRepository cpTravelRepository;
     private CpTravelPlaceRepository cpTravelPlaceRepository;
+    private CpTravelSearchRepository cpTravelSearchRepository;
     private UserBl userBl;
     private CarBl carBl;
     private PersonBl personBl;
     private ZoneBl zoneBl;
     private PlaceBl placeBl;
     private TravelBl travelBl;
+    private TravelSearchBl travelSearchBl;
     private TravelPlaceBl travelPlaceBl;
     private  Validator validator = new Validator();
     @Autowired
@@ -64,13 +66,15 @@ public class BotBl {
         }
         else{
             List<CpCar> allCars;
+            List<CpTravelSearch> allSearch;
             Boolean validation;
-            String newLastName,newFirstName,newCellphone,newCI,newBrand,newModel,newEnrollmentNumber,newPassenger;
+            String newLastName,newFirstName,newCellphone,newCI,newBrand,newModel,newEnrollmentNumber,newPassenger, newStartPlace, newPlace;
             Integer idUser;
             CpCar newCar;
             CpPerson cpPerson;
             CpUser cpUser;
             CpTravel currentTravel = new CpTravel();
+            CpTravelSearch search;
             cpUser = cpUserRepository.findByBotUserId(update.getMessage().getFrom().getId().toString());
 
             int last_conversation = cpUser.getConversationId();
@@ -421,24 +425,34 @@ public class BotBl {
                     }
                     if(update.getMessage().getText().equals("Volver al Menú Principal")){
                         response = 3;
-                    }else{
-                        response =30;
                     }
                     break;
                 case 21:
-                    response=30;
-                    if(isOnlyNumbers(update.getMessage().getText())){
-                        response = 23;
-                    }
+
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    search = new CpTravelSearch();
+                    search.setIdPerson(cpUser.getPersonId().getPersonId());
+                    search.setPlaceStart("NULL");
+                    search.setPlaceFinish("NULL");
+                    search.setDepartureTime("NULL");
+                    LOGGER.info(search.toString());
+                    LOGGER.info(idUser.toString());
+                    cpTravelSearchRepository.save(search);
+                    response = 23;
                     break;
                 case 22:
                     response = 20;
                     break;
                 case 23:
-                    response = 30;
-                    if(isOnlyNumbers(update.getMessage().getText())){
-                        response = 24;
-                    }
+                    idUser = cpUser.getPersonId().getPersonId();
+                    LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                    newPlace = update.getMessage().getText();
+                    allSearch = cpTravelSearchRepository.findAll();
+                    search = getLastSearch(allSearch,idUser);
+                    search.setPlaceStart(newPlace);
+                    cpTravelSearchRepository.save(search);
+                    response = 42;
                     break;
                 case 24:
                     idUser = cpUser.getPersonId().getPersonId();
@@ -698,6 +712,25 @@ public class BotBl {
                     LOGGER.info("Travel Cancel Confirmation NO");
                     response = 10;
                     break;
+                case 42:
+                    if(validator.isValidDate(update.getMessage().getText())){
+                        LOGGER.info("Fecha Valida");
+                        idUser = cpUser.getPersonId().getPersonId();
+                        allSearch = cpTravelSearchRepository.findAll();
+                        search = getLastSearch(allSearch,idUser);
+                        search.setDepartureTime(update.getMessage().getText());
+                        cpTravelRepository.save(currentTravel);
+                        response = 43;
+                    }
+                    else{
+                        LOGGER.info("Fecha Invalida");
+                        response = 42;
+                    }
+
+                    break;
+                case 43:
+                    response = 24;
+                    break;
             }
             cpUser.setConversationId(response);
             cpUserRepository.save(cpUser);
@@ -812,6 +845,16 @@ public class BotBl {
         }
         return  lastCar;
     }
+
+    private CpTravelSearch getLastSearch(List<CpTravelSearch> all, Integer idUser){
+        CpTravelSearch lastSearch = null;
+        for(CpTravelSearch search: all){
+            if(search.getIdPerson() == idUser){
+                lastSearch = search;
+            }
+        }
+        return  lastSearch;
+    }
     private boolean isOnlyAlphaNumeric(String text){
         boolean validation = true;
         for(int i=0;i<text.length();i++){
@@ -858,4 +901,5 @@ public class BotBl {
         }
         return validation;
     }
+
 }

@@ -410,9 +410,8 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 23:
                 String zone = update.getMessage().getText();
-                responses.add("Estos viajes estan disponibles para la zona "+zone);
-                responses.add("Presione el numero del viaje al que desea registrarse");
-                //options = travelOptions(options, zone);
+                responses.add("Escoja un lugar dentro de esta zona "+zone);
+                rkm = createReplyKeyboardOptions(action.getOptions());
                 break;
             case 24:
                 //if(update.getCallbackQuery()!=null){
@@ -506,6 +505,13 @@ public class MainBot extends TelegramLongPollingBot {
             case 41:
                 responses.add("Viaje Cancelado");
                 rkm = createReplyKeyboardOptions(action.getOptions());
+                break;
+            case 42:
+                responses.add("A que hora y fecha desea buscarlo?\n(formato DD/MM/YYYY HH:MM)");
+                break;
+            case 43:
+                responses.add("Estos son los viajes disponibles");
+                //responses.add(travelOptions());
                 break;
         }
         for(String messageText: responses) {

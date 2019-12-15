@@ -5,7 +5,6 @@ import com.carpooling.bot.dao.CpTravelRepository;
 import com.carpooling.bot.domain.CpCar;
 import com.carpooling.bot.domain.CpPerson;
 import com.carpooling.bot.domain.CpTravel;
-import com.google.inject.internal.cglib.core.$ReflectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,7 @@ public class TravelBl {
         cpTravelRepository = null;
     }
     @Autowired
-    public TravelBl(CpTravelRepository cpTravelRepository, CpCarRepository cpCarRepository,TravelPlaceBl travelPlaceBl) {
-        this.travelPlaceBl = travelPlaceBl;
+    public TravelBl(CpTravelRepository cpTravelRepository, CpCarRepository cpCarRepository) {
         this.cpTravelRepository = cpTravelRepository;
         this.cpCarRepository = cpCarRepository;
     }
@@ -37,12 +35,26 @@ public class TravelBl {
         List<CpTravel> travelList = new ArrayList<>();
         List<CpTravel> all = cpTravelRepository.findAll();
         for(CpTravel travel: all){
-            if(travel.getStatus() != 0){
+            if(travel.getStatus() == 1){
                 travelList.add(travel);
             }
         }
         return travelList;
     }
+
+    public List<CpTravel> getTravelByZone(String zone){
+        List<CpTravel> travelList = new ArrayList<>();
+        /*List<CpTravel> all = cpTravelRepository.findByZone(zone);
+        for(CpTravel travel: all){
+
+            if(travel.getStatus() == 0){
+
+                travelList.add(travel);
+            }
+        }*/
+        return  travelList;
+    }
+
     public CpTravel getLastTravel(List<CpTravel> travels,CpPerson cpPerson){
         CpTravel result = new CpTravel();
         for(CpTravel travel: travels){
