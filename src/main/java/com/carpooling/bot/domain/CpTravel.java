@@ -254,5 +254,6 @@ public class CpTravel implements Serializable {
     public String toString() {
         return "com.carpooling.bot.domain.CpTravel[ travelId=" + travelId + " ]";
     }
+
     
 }

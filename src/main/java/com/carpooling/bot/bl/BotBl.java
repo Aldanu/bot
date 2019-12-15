@@ -58,6 +58,7 @@ public class BotBl {
         LOGGER.info("Receiving an update from user {}",update);
         int response = 0;
         List<String> options = new ArrayList<>();
+        List<String> messages = new ArrayList<>();
         if(isNewUser(update)){
             LOGGER.info("First time using app for: {} ",update.getMessage().getFrom() );
             response = 1;
@@ -245,8 +246,24 @@ public class BotBl {
                         LOGGER.info("Registrar Viaje");
                         response = 27;
                     }
-                    if(update.getMessage().getText().equals("Ver viajes")){
-                        response = 29;
+                    if(update.getMessage().getText().equals("Cancelar Viaje")){
+                        idUser = cpUser.getPersonId().getPersonId();
+                        cpPerson = cpPersonRepository.findById(idUser).get();
+                        List<CpTravel> activeTravels = travelBl.findActiveTravels(cpPerson);
+                        if(activeTravels.size()>0){
+                            int a=1;
+                            for(CpTravel c: activeTravels){
+                                messages.add("Viaje "+a+"\n"+travelBl.toStringOption(c));
+                                options.add("Viaje "+a);
+                                a++;
+                            }
+                            response = 38;
+                        }
+                        else{
+                            options.add("Ok");
+                            response = 40;
+                        }
+
                     }
                     if(update.getMessage().getText().equals("Volver al Menú Principal")){
                         response = 3;
@@ -588,7 +605,7 @@ public class BotBl {
                     cpPerson = cpPersonRepository.findById(idUser).get();
                     currentTravel = travelBl.getLastTravel(cpTravelRepository.findAll(),cpPerson);
                     CpCar carTravel = currentTravel.getCarId();
-                    if(isOnlyNumbers(update.getMessage().getText())){
+                    if(validator.isOnlyNumbers(update.getMessage().getText())){
                         if(carTravel.getCapacity()>=Integer.parseInt(update.getMessage().getText())){
                             currentTravel.setNumberPassengers(Integer.parseInt(update.getMessage().getText()));
                             cpTravelRepository.save(currentTravel);
@@ -616,23 +633,77 @@ public class BotBl {
                     if(message.equals("Si")){
                         currentTravel.setPetFriendly(1);
                         cpTravelRepository.save(currentTravel);
-                        response=10;
+                        response=37;
                     }
                     else{
                         if(message.equals("No")){
                             currentTravel.setPetFriendly(0);
                             cpTravelRepository.save(currentTravel);
-                            response=10;
+                            response=37;
                         }
                         else{
                             response = 36;
                         }
                     }
+                    break;
+                case 37:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    currentTravel = travelBl.getLastTravel(cpTravelRepository.findAll(),cpPerson);
+                    currentTravel.setDescription(update.getMessage().getText());
+                    cpTravelRepository.save(currentTravel);
+                    response = 10;
+                    break;
+                case 38:
+                    idUser = cpUser.getPersonId().getPersonId();
+                    cpPerson = cpPersonRepository.findById(idUser).get();
+                    CpTravel travelToCancel = travelBl.getTravelByInfo(update.getMessage().getText(),cpPerson);
+                    if(travelToCancel!=null) {
+                        travelToCancel.setStatus(2);
+                        cpTravelRepository.save(travelToCancel);
+                        options.add("Si");
+                        options.add("No");
+                        response = 39;
+                    }
+                    else{
+                        response = 10;
+                    }
+                    break;
+                case 39:
+                    response = 10;
+                    if(update.getMessage().getText().equals("Si")){
+                        idUser = cpUser.getPersonId().getPersonId();
+                        cpPerson = cpPersonRepository.findById(idUser).get();
+                        CpTravel cancel = travelBl.getActiveCanceledTravel(cpPerson);
+                        LOGGER.info(cancel.getTravelId().toString());
+                        cancel.setStatus(0);
+                        cpTravelRepository.save(cancel);
+                        //MULTICAST TO DO
+                        options.add("Ok");
+                        response = 41;
+                    }
+                    if(update.getMessage().getText().equals("No")){
+                        idUser = cpUser.getPersonId().getPersonId();
+                        cpPerson = cpPersonRepository.findById(idUser).get();
+                        CpTravel cancel = travelBl.getActiveCanceledTravel(cpPerson);
+                        LOGGER.info(cancel.getTravelId().toString());
+                        cancel.setStatus(1);
+                        cpTravelRepository.save(cancel);
+                    }
+                    break;
+                case 40:
+                    LOGGER.info("No active travels");
+                    response = 10;
+                    break;
+                case 41:
+                    LOGGER.info("Travel Cancel Confirmation NO");
+                    response = 10;
+                    break;
             }
             cpUser.setConversationId(response);
             cpUserRepository.save(cpUser);
         }
-        responseConversation result = new responseConversation(response,options);
+        responseConversation result = new responseConversation(response,options,messages);
         return result;
     }
     private boolean isNewUser(Update update){

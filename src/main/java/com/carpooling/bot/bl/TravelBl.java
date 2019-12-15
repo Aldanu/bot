@@ -5,6 +5,7 @@ import com.carpooling.bot.dao.CpTravelRepository;
 import com.carpooling.bot.domain.CpCar;
 import com.carpooling.bot.domain.CpPerson;
 import com.carpooling.bot.domain.CpTravel;
+import com.google.inject.internal.cglib.core.$ReflectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,14 @@ import static org.hibernate.bytecode.BytecodeLogger.LOGGER;
 public class TravelBl {
     CpTravelRepository cpTravelRepository;
     CpCarRepository cpCarRepository;
+    TravelPlaceBl travelPlaceBl;
+    Validator validator = new Validator();
     public TravelBl(){
         cpTravelRepository = null;
     }
     @Autowired
-    public TravelBl(CpTravelRepository cpTravelRepository, CpCarRepository cpCarRepository) {
+    public TravelBl(CpTravelRepository cpTravelRepository, CpCarRepository cpCarRepository,TravelPlaceBl travelPlaceBl) {
+        this.travelPlaceBl = travelPlaceBl;
         this.cpTravelRepository = cpTravelRepository;
         this.cpCarRepository = cpCarRepository;
     }
@@ -33,7 +37,7 @@ public class TravelBl {
         List<CpTravel> travelList = new ArrayList<>();
         List<CpTravel> all = cpTravelRepository.findAll();
         for(CpTravel travel: all){
-            if(travel.getStatus() == 1){
+            if(travel.getStatus() != 0){
                 travelList.add(travel);
             }
         }
@@ -49,5 +53,60 @@ public class TravelBl {
             }
         }
         return  result;
+    }
+    public List<CpTravel> findActiveTravels(CpPerson person){
+        List<CpTravel> result = new ArrayList<>();
+        for(CpTravel travel:all()){
+
+            if(validator.isFuture(travel.getDepartureTime()) && person.getPersonId() == travel.getCarId().getPersonId().getPersonId()){
+                result.add(travel);
+            }
+            else{
+                travel.setStatus(0);
+                cpTravelRepository.save(travel);
+            }
+        }
+        return result;
+    }
+    public String toStringOption(CpTravel travel){
+        String result = "";
+        result += ("Nombre del Conductor "+travel.getCarId().getPersonId().getFirstName()+"\n");
+        result += ("Apellido del Conductor "+travel.getCarId().getPersonId().getLastName()+"\n");
+        result += ("Automovil "+travel.getCarId().getBrand() + " " + travel.getCarId().getModel()+"\n");
+        result += ("Placa "+travel.getCarId().getEnrollmentNumber())+"\n";
+        result += ("Fecha y Hora de partida: "+travel.getDepartureTime()+"\n");
+        result += ("Ruta ");
+        result += travelPlaceBl.routeString(travel);
+        return result;
+    }
+    public CpTravel getTravelByInfo(String message,CpPerson person){
+        CpTravel travel = new CpTravel();
+        LOGGER.info(message);
+        message = message.replace("Viaje "," ");
+        LOGGER.info(message);
+        message = message.trim();
+        LOGGER.info(message);
+        int numTravel = Integer.parseInt(message);
+        int ar = 0;
+        for(CpTravel t:all()){
+            if(person.getPersonId() == t.getCarId().getPersonId().getPersonId()){
+                ar++;
+                if(ar == numTravel){
+                    travel = t;
+                }
+            }
+        }
+        return  travel;
+    }
+    public CpTravel getActiveCanceledTravel(CpPerson person){
+        CpTravel travel = new CpTravel();
+        for(CpTravel t:all()){
+            if(t.getStatus() == 2 && person.getPersonId() == t.getCarId().getPersonId().getPersonId()){
+                LOGGER.info("SELECCIONADO");
+                LOGGER.info(t.getTravelId());
+                travel = t;
+            }
+        }
+        return travel;
     }
 }
