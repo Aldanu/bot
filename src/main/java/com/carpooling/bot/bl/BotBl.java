@@ -667,6 +667,7 @@ public class BotBl {
                     cpPerson = cpPersonRepository.findById(idUser).get();
                     currentTravel = travelBl.getLastTravel(cpTravelRepository.findAll(),cpPerson);
                     CpCar carTravel = currentTravel.getCarId();
+                    LOGGER.info(carTravel.toStringOption());
                     if(validator.isOnlyNumbers(update.getMessage().getText())){
                         if(carTravel.getCapacity()>=Integer.parseInt(update.getMessage().getText())){
                             currentTravel.setNumberPassengers(Integer.parseInt(update.getMessage().getText()));

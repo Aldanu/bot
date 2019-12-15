@@ -28,7 +28,8 @@ public class TravelBl {
         cpTravelRepository = null;
     }
     @Autowired
-    public TravelBl(CpTravelRepository cpTravelRepository, CpCarRepository cpCarRepository) {
+    public TravelBl(CpTravelRepository cpTravelRepository, CpCarRepository cpCarRepository,TravelPlaceBl travelPlaceBl) {
+        this.travelPlaceBl = travelPlaceBl;
         this.cpTravelRepository = cpTravelRepository;
         this.cpCarRepository = cpCarRepository;
     }
@@ -36,7 +37,7 @@ public class TravelBl {
         List<CpTravel> travelList = new ArrayList<>();
         List<CpTravel> all = cpTravelRepository.findAll();
         for(CpTravel travel: all){
-            if(travel.getStatus() == 1){
+            if(travel.getStatus() >= 1){
                 travelList.add(travel);
             }
         }
@@ -82,6 +83,8 @@ public class TravelBl {
         return result;
     }
     public String toStringOption(CpTravel travel){
+        LOGGER.info("To string");
+        LOGGER.info(travel.getTravelId());
         String result = "";
         result += ("Nombre del Conductor "+travel.getCarId().getPersonId().getFirstName()+"\n");
         result += ("Apellido del Conductor "+travel.getCarId().getPersonId().getLastName()+"\n");

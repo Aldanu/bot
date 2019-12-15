@@ -154,6 +154,7 @@ public class Validator {
         boolean result = false;
         int a,b,c,d;
         int day,month,year,hour,minute;
+        if(date.length() == 1) return false;
         a = (int)date.charAt(0) - 48;
         b = (int)date.charAt(1) - 48;
         day = a*10 + b;

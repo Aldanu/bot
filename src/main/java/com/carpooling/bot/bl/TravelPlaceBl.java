@@ -4,6 +4,8 @@ import com.carpooling.bot.dao.CpTravelPlaceRepository;
 import com.carpooling.bot.dao.CpTravelRepository;
 import com.carpooling.bot.domain.CpTravel;
 import com.carpooling.bot.domain.CpTravelPlace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,7 @@ import javax.transaction.Transactional;
 public class TravelPlaceBl {
     private CpTravelPlaceRepository cpTravelPlaceRepository;
     private CpTravelRepository cpTravelRepository;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(TravelPlaceBl.class);
     public TravelPlaceBl(){
         this.cpTravelPlaceRepository = null;
         this.cpTravelRepository = null;
@@ -27,6 +29,7 @@ public class TravelPlaceBl {
     }
 
     public int getLastPosition(CpTravel travel){
+
         int result = 0;
         for(CpTravelPlace travelPlace:cpTravelPlaceRepository.findAll()){
             if(travelPlace.getTravelId().getTravelId() == travel.getTravelId()){
@@ -37,7 +40,10 @@ public class TravelPlaceBl {
     }
     public String routeString(CpTravel travel){
         String result = "";
+        LOGGER.info("EMPEZANDO RUTEO");
+        LOGGER.info(travel.toString());
         for(CpTravelPlace travelPlace:cpTravelPlaceRepository.findAll()){
+            LOGGER.info(travelPlace.toString());
             if(travelPlace.getTravelId().getTravelId() == travel.getTravelId()){
                 if(travelPlace.getposition()==1){
                     result += ("Partida: "+travelPlace.getPlaceId().getName()) + "\n";
