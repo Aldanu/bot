@@ -74,21 +74,9 @@ public class Validator {
                         LOGGER.info("The date not correspond to a valid date");
                        return  false;
                     }
-                    int diffDays = (int) ((selectedDate.getTime()-current.getTime())/86400000);
-                    if(diffDays<0){
-                        LOGGER.info("Not Future Time");
-                        result = false;
-                    }
-                    if(diffDays==0){
-                        LocalDateTime localDateTime = LocalDateTime.now();
-                        int localHour = localDateTime.getHour();
-                        int localMinute = localDateTime.getMinute();
-                        int time1 = localHour*60+localMinute;
-                        int time2 = hour*60+minute;
-                        if(time1>=time2){
-                            LOGGER.info("Not Future Time");
-                            result = false;
-                        }
+                    if(!isFuture(date)){
+                        LOGGER.info("Not a future time");
+                        return  false;
                     }
                 }
             }
@@ -161,5 +149,54 @@ public class Validator {
             }
         }
         return validation;
+    }
+    public static boolean isFuture(String date){
+        boolean result = false;
+        int a,b,c,d;
+        int day,month,year,hour,minute;
+        a = (int)date.charAt(0) - 48;
+        b = (int)date.charAt(1) - 48;
+        day = a*10 + b;
+        a = (int)date.charAt(3) - 48;
+        b = (int)date.charAt(4) - 48;
+        month = a*10 + b;
+        a = (int)date.charAt(6) - 48;
+        b = (int)date.charAt(7) - 48;
+        c = (int)date.charAt(8) - 48;
+        d = (int)date.charAt(9) - 48;
+        year = a*1000+b*100+c*10+d;
+        a = (int)date.charAt(11) - 48;
+        b = (int)date.charAt(12) - 48;
+        hour = a*10+b;
+        a = (int)date.charAt(14) - 48;
+        b = (int)date.charAt(15) - 48;
+        minute = a*10+b;
+        LocalDateTime localDateTime = LocalDateTime.now();
+        int localDay = localDateTime.getDayOfMonth();
+        int localMonth = localDateTime.getMonthValue();
+        int localYear = localDateTime.getYear();
+        int localHour = localDateTime.getHour();
+        int localMinute = localDateTime.getMinute();
+        if(localYear==year){
+            if(localMonth==month){
+                if(localDay == day){
+                    int time1 = hour*60+minute;
+                    int time2 = localHour*60+localMinute;
+                    if(time1>time2){
+                        result = true;
+                    }
+                }
+                if(localDay > day){
+                    result = true;
+                }
+            }
+            if(localMonth>month){
+                result = true;
+            }
+        }
+        if(localYear>year){
+            result = true;
+        }
+        return result;
     }
 }

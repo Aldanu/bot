@@ -35,4 +35,19 @@ public class TravelPlaceBl {
         }
         return result+1;
     }
+    public String routeString(CpTravel travel){
+        String result = "";
+        for(CpTravelPlace travelPlace:cpTravelPlaceRepository.findAll()){
+            if(travelPlace.getTravelId().getTravelId() == travel.getTravelId()){
+                if(travelPlace.getposition()==1){
+                    result += ("Partida: "+travelPlace.getPlaceId().getName()) + "\n";
+                }
+                else{
+                    result += ("Parada: "+travelPlace.getPlaceId().getName() + "\n");
+                }
+            }
+        }
+        result+="Fin";
+        return  result;
+    }
 }

@@ -214,7 +214,7 @@ public class MainBot extends TelegramLongPollingBot {
         keyboard.add(row);
         row = new KeyboardRow();
         // Set each button for the second line
-        row.add("Ver Viajes");
+        row.add("Cancelar Viaje");
         // Add the second row to the keyboard
         keyboard.add(row);
         row = new KeyboardRow();
@@ -483,6 +483,28 @@ public class MainBot extends TelegramLongPollingBot {
                 break;
             case 36:
                 responses.add("Usted acepta mascotas?");
+                rkm = createReplyKeyboardOptions(action.getOptions());
+                break;
+            case 37:
+                responses.add("Añada una descripción adicional (Si no tiene nada adicional que añadir ponga un -");
+                break;
+            case 38:
+                responses.add("Seleccione un viaje a cancelar");
+                for(String s:action.getResponses()){
+                    responses.add(s);
+                }
+                rkm = createReplyKeyboardOptions(action.getOptions());
+                break;
+            case 39:
+                responses.add("Esta seguro de cancelar el viaje?");
+                rkm = createReplyKeyboardOptions(action.getOptions());
+                break;
+            case 40:
+                responses.add("Usted no tiene ningun viaje para cancelar");
+                rkm = createReplyKeyboardOptions(action.getOptions());
+                break;
+            case 41:
+                responses.add("Viaje Cancelado");
                 rkm = createReplyKeyboardOptions(action.getOptions());
                 break;
         }

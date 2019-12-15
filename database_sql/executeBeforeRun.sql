@@ -26,3 +26,12 @@ INSERT INTO cp_place(zone_id,name,latitude,longitude,status) VALUES (8,'UMSA Cot
 
 ALTER TABLE cp_travel ALTER COLUMN departure_time SET DATA TYPE varchar(100);
 ALTER TABLE cp_travel_place RENAME COLUMN "order" TO position;
+
+CREATE TABLE cp_travel_search (
+    travel_search_id serial  NOT NULL,
+    id_person int  NULL,
+    place_start varchar(200)  NULL,
+    place_finish varchar(200)  NULL,
+    departure_time varchar(100)  NULL,
+    CONSTRAINT cp_travel_search_pk PRIMARY KEY (travel_search_id)
+);
