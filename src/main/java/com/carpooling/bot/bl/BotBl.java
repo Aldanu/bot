@@ -727,7 +727,9 @@ public class BotBl {
                     cpTravelSearchRepository.save(search);
 
                     List<CpTravel> selectTravel = travelBl.findActiveTravelsAll();
+                    LOGGER.info("Numero de viajes encontrados: {}", selectTravel.size());
                     List<CpTravel> travelsFound = travelBl.selectTravels(selectTravel, search);
+                    LOGGER.info("Numero de viajes con filtro: {}", travelsFound.size());
                     for(CpTravel travel:travelsFound){
                         options.add((travel.toStringInfo()));
                     }

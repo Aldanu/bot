@@ -186,15 +186,15 @@ public class Validator {
                         result = true;
                     }
                 }
-                if(localDay > day){
+                if(localDay < day){
                     result = true;
                 }
             }
-            if(localMonth>month){
+            if(localMonth<month){
                 result = true;
             }
         }
-        if(localYear>year){
+        if(localYear<year){
             result = true;
         }
         return result;
