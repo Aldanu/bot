@@ -257,6 +257,8 @@ public class CpTravel implements Serializable {
 
 
     public String toStringInfo() {
-        return getDescription()+" "+departureTime+" Precio:" + cost+" asientos:"+numberPassengers;
+        String x="Viaje "+getTravelId()+":"+"\nPartida: "+getDepartureTime()+"\nCosto: "+getCost()+"\nMascotas: "+getPetFriendly()+
+                "\nNumero de asientos disponibles: "+getNumberPassengers()+"\nDescripcion: "+getDescription();
+        return x;
     }
 }

@@ -511,11 +511,9 @@ public class MainBot extends TelegramLongPollingBot {
                 responses.add("A que hora y fecha desea buscarlo?\n(formato DD/MM/YYYY HH:MM)");
                 break;
             case 43:
-                int i=1;
                 responses.add("Estos son los viajes disponibles");
                 for(String s:action.getOptions()){
-                    responses.add("Viaje "+i+"\n"+s);
-                    i++;
+                    responses.add(s);
                 }
                 responses.add("Ingrese el numero del viaje que desea registrar");
                 break;

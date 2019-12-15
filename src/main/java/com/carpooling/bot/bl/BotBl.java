@@ -27,6 +27,7 @@ public class BotBl {
     private CpTravelRepository cpTravelRepository;
     private CpTravelPlaceRepository cpTravelPlaceRepository;
     private CpTravelSearchRepository cpTravelSearchRepository;
+    private CpTravelRiderRepository cpTravelRiderRepository;
     private UserBl userBl;
     private CarBl carBl;
     private PersonBl personBl;
@@ -39,12 +40,13 @@ public class BotBl {
     @Autowired
     public BotBl(CpUserRepository cpUserRepository, CpPersonRepository cpPersonRepository, CpCarRepository cpCarRepository,
                  CpTravelRepository cpTravelRepository, CpTravelPlaceRepository cpTravelPlaceRepository,UserBl userBl, CarBl carBl, PersonBl personBl,ZoneBl zoneBl,PlaceBl placeBl
-                ,TravelBl travelBl,TravelPlaceBl travelPlaceBl, CpTravelSearchRepository cpTravelSearchRepository, TravelSearchBl travelSearchBl) {
+                ,TravelBl travelBl,TravelPlaceBl travelPlaceBl, CpTravelSearchRepository cpTravelSearchRepository, TravelSearchBl travelSearchBl, CpTravelRiderRepository cpTravelRiderRepository) {
         this.cpUserRepository = cpUserRepository;
         this.cpPersonRepository = cpPersonRepository;
         this.cpCarRepository= cpCarRepository;
         this.cpTravelRepository = cpTravelRepository;
         this.cpTravelPlaceRepository = cpTravelPlaceRepository;
+        this.cpTravelRiderRepository = cpTravelRiderRepository;
         this.userBl = userBl;
         this.carBl = carBl;
         this.personBl = personBl;
@@ -70,9 +72,10 @@ public class BotBl {
             List<CpCar> allCars;
             List<CpTravelSearch> allSearch;
             Boolean validation;
-            String newLastName,newFirstName,newCellphone,newCI,newBrand,newModel,newEnrollmentNumber,newPassenger, newStartPlace, newPlace;
+            String newLastName,newFirstName,newCellphone,newCI,newBrand,newModel,newEnrollmentNumber,newPassenger, newStartPlace, newPlace, newTravelRider;
             Integer idUser;
             CpCar newCar;
+            CpTravelRider confirm;
             CpPerson cpPerson;
             CpUser cpUser;
             CpTravel currentTravel = new CpTravel();
@@ -420,6 +423,7 @@ public class BotBl {
                         response = 21;
                     }
                     if(update.getMessage().getText().equals("Ver Viaje")){
+                        //CpTravelRider myTravels;
                         response = 22;
                     }
                     if(update.getMessage().getText().equals("Cancelar Viajes")){
@@ -464,14 +468,40 @@ public class BotBl {
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
                     cpPerson = cpPersonRepository.findById(idUser).get();
-                    response = 24;
-                    //Here is the menu for the carpooler
-                    if(update.getMessage().getText().equals("Si")) {
+                    response = 30;
+
+                    if(update.getMessage().getText().equals("Si")){
+                        allSearch = cpTravelSearchRepository.findAll();
+                        search = getLastSearch(allSearch,idUser);
+                        cpTravelSearchRepository.save(search);
+
+                        cpPerson = cpPersonRepository.findById(idUser).get();
+                        CpTravel cancel = travelBl.getActiveCanceledTravel(cpPerson);
+                        //MULTICAST TO DO
+                        options.add("Ok");
+
+                        String travelid=update.getMessage().getText();
+
+
+                        List<CpTravel> travels = cpTravelRepository.findAll();
+                        CpTravel currenTravel = travelBl.getLastTravel(travels,cpPerson);
+
+                        LOGGER.info("Buscando el id {} en CpPerson",idUser);
+                        confirm = new CpTravelRider();
+                        confirm.setPersonId(cpPerson);
+                        confirm.setTravelId(currenTravel);
+                        LOGGER.info(confirm.toString());
+                        LOGGER.info(idUser.toString());
+
+                        confirm.setStatus(1);
+                        confirm.setTxHost("localhost");
+                        confirm.setTxUser("admin");
+                        confirm.setTxDate(new Date());
+                        cpTravelRiderRepository.save(confirm);
                         response = 25;
-                    }else if(update.getMessage().getText().equals("No")){
-                        response = 26;
-                    }else{
-                        response=30;
+                    }
+                    if(update.getMessage().getText().equals("No")){
+                        response=26;
                     }
                     break;
                 case 25:
@@ -737,6 +767,7 @@ public class BotBl {
                     response = 43;
                     break;
                 case 43:
+
                     response = 24;
                     break;
             }
