@@ -424,6 +424,19 @@ public class BotBl {
                     }
                     if(update.getMessage().getText().equals("Ver Viaje")){
                         //CpTravelRider myTravels;
+                        idUser = cpUser.getPersonId().getPersonId();
+                        cpPerson = cpPersonRepository.findById(idUser).get();
+                        List<CpTravel> activeTravels = travelBl.findActiveTravels(cpPerson);
+                        if(activeTravels.size()>0){
+                            int a=1;
+                            for(CpTravel c: activeTravels){
+                                messages.add("Viaje "+a+"\n"+travelBl.toStringOption(c));
+                                options.add("Viaje "+a);
+                                a++;
+                            }
+                            response = 38;
+                        }
+
                         response = 22;
                     }
                     if(update.getMessage().getText().equals("Cancelar Viajes")){
