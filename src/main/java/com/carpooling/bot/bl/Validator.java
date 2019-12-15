@@ -74,22 +74,9 @@ public class Validator {
                         LOGGER.info("The date not correspond to a valid date");
                        return  false;
                     }
-                    int diffDays = (int) ((selectedDate.getTime()-current.getTime())/86400000);
-                    LOGGER.info("Diferencia " + diffDays);
-                    if(diffDays<0){
-                        LOGGER.info("Not Future Time");
-                        result = false;
-                    }
-                    if(diffDays==0){
-                        LocalDateTime localDateTime = LocalDateTime.now();
-                        int localHour = localDateTime.getHour();
-                        int localMinute = localDateTime.getMinute();
-                        int time1 = localHour*60+localMinute;
-                        int time2 = hour*60+minute;
-                        if(time1>=time2){
-                            LOGGER.info("Not Future Time");
-                            result = false;
-                        }
+                    if(!isFuture(date)){
+                        LOGGER.info("Not a future time");
+                        return  false;
                     }
                 }
             }
@@ -163,7 +150,7 @@ public class Validator {
         }
         return validation;
     }
-    public boolean isFuture(String date){
+    public static boolean isFuture(String date){
         boolean result = false;
         int a,b,c,d;
         int day,month,year,hour,minute;
