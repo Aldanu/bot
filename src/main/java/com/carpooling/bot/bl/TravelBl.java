@@ -5,6 +5,7 @@ import com.carpooling.bot.dao.CpTravelRepository;
 import com.carpooling.bot.domain.CpCar;
 import com.carpooling.bot.domain.CpPerson;
 import com.carpooling.bot.domain.CpTravel;
+import com.carpooling.bot.domain.CpTravelSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,5 +121,37 @@ public class TravelBl {
             }
         }
         return travel;
+    }
+
+    public List<CpTravel> findActiveTravelsAll(){
+        List<CpTravel> result = new ArrayList<>();
+        for(CpTravel travel:all()){
+
+            if(validator.isFuture(travel.getDepartureTime())){
+                result.add(travel);
+            }
+            else{
+                travel.setStatus(0);
+                cpTravelRepository.save(travel);
+            }
+        }
+        return result;
+    }
+
+    public List<CpTravel> selectTravels(List<CpTravel> selectTravel, CpTravelSearch search) {
+        List<CpTravel> result = new ArrayList<>();
+        for(CpTravel travel:selectTravel){
+
+            if(passBy(search.getPlaceStart())){
+                result.add(travel);
+            }
+        }
+        return result;
+    }
+
+    private boolean passBy(String placeStart) {
+        boolean passing=true;
+
+        return passing;
     }
 }

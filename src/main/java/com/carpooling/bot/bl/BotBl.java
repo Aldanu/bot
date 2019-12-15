@@ -39,7 +39,7 @@ public class BotBl {
     @Autowired
     public BotBl(CpUserRepository cpUserRepository, CpPersonRepository cpPersonRepository, CpCarRepository cpCarRepository,
                  CpTravelRepository cpTravelRepository, CpTravelPlaceRepository cpTravelPlaceRepository,UserBl userBl, CarBl carBl, PersonBl personBl,ZoneBl zoneBl,PlaceBl placeBl
-                ,TravelBl travelBl,TravelPlaceBl travelPlaceBl) {
+                ,TravelBl travelBl,TravelPlaceBl travelPlaceBl, CpTravelSearchRepository cpTravelSearchRepository, TravelSearchBl travelSearchBl) {
         this.cpUserRepository = cpUserRepository;
         this.cpPersonRepository = cpPersonRepository;
         this.cpCarRepository= cpCarRepository;
@@ -52,6 +52,8 @@ public class BotBl {
         this.placeBl = placeBl;
         this.travelBl = travelBl;
         this.travelPlaceBl = travelPlaceBl;
+        this.cpTravelSearchRepository = cpTravelSearchRepository;
+        this.travelSearchBl=travelSearchBl;
     }
 
     //This method process and update when a user is send a message to the chatbot
@@ -428,7 +430,11 @@ public class BotBl {
                     }
                     break;
                 case 21:
-
+                    CpZone selectedZone1 = zoneBl.findByName(update.getMessage().getText());
+                    List<CpPlace> placesZone1 = placeBl.findByZone(selectedZone1);
+                    for(CpPlace place:placesZone1){
+                        options.add(place.toStringOption());
+                    }
                     idUser = cpUser.getPersonId().getPersonId();
                     LOGGER.info("Buscando el id {} en CpPerson",idUser);
                     search = new CpTravelSearch();
@@ -713,20 +719,20 @@ public class BotBl {
                     response = 10;
                     break;
                 case 42:
-                    if(validator.isValidDate(update.getMessage().getText())){
-                        LOGGER.info("Fecha Valida");
-                        idUser = cpUser.getPersonId().getPersonId();
-                        allSearch = cpTravelSearchRepository.findAll();
-                        search = getLastSearch(allSearch,idUser);
-                        search.setDepartureTime(update.getMessage().getText());
-                        cpTravelRepository.save(currentTravel);
-                        response = 43;
-                    }
-                    else{
-                        LOGGER.info("Fecha Invalida");
-                        response = 42;
+                    LOGGER.info("Fecha Valida");
+                    idUser = cpUser.getPersonId().getPersonId();
+                    allSearch = cpTravelSearchRepository.findAll();
+                    search = getLastSearch(allSearch,idUser);
+                    search.setDepartureTime(update.getMessage().getText());
+                    cpTravelSearchRepository.save(search);
+
+                    List<CpTravel> selectTravel = travelBl.findActiveTravelsAll();
+                    List<CpTravel> travelsFound = travelBl.selectTravels(selectTravel, search);
+                    for(CpTravel travel:travelsFound){
+                        options.add((travel.toStringInfo()));
                     }
 
+                    response = 43;
                     break;
                 case 43:
                     response = 24;

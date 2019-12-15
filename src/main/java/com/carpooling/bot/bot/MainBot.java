@@ -460,7 +460,8 @@ public class MainBot extends TelegramLongPollingBot {
                 rkm=createOkMenu();
                 break;
             case 31:
-                responses.add("Seleccione un lugar de partida");
+                zone = update.getMessage().getText();
+                responses.add("Escoja un lugar dentro de esta zona "+zone);
                 rkm = createReplyKeyboardOptions(action.getOptions());
                 LOGGER.info("Creando Lugares por cierta zona");
                 break;
